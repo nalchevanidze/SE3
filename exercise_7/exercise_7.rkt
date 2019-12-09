@@ -51,7 +51,7 @@
   (square CELL_SIZE (cellStyle x)  'black)
 )
 
-(define canvas 
+(define background 
   (square FRAME_SIZE "solid" "white") 
 )
 
@@ -68,7 +68,7 @@
   )
 ) 
 
-(define (drawCells ls background)  
+(define (drawWorld ls)  
   (place-images
    (map cellShape ls) 
    (map cellPlace ls)
@@ -133,7 +133,7 @@
 (define (executeRules c ls)
   (let* 
     (
-      [num (liveNeighbours c state)]
+      [num (liveNeighbours c ls)]
       [isLive (cell-live c)]
     )
     (cond
@@ -153,19 +153,6 @@
   )
 ) 
 
-;; DIRTY MUTATION
-(define (nextState! st) 
-     (let* 
-        ([ st (set! state (nextState state))])
-        state
-     )
-)     
-
-(define (renderScene state)
-  (drawCells state canvas)
-)
-
-
 ;;; 2.4 Simulation
 
 ;;; Machen Sie sich mit dem World/Universe-Framework vertraut. Sie finden
@@ -178,7 +165,7 @@
 ;;; eines Spielzustandes an die Methoden to-draw beziehungswei- se on-tick. 
 ;;; Im Anschluss erwecken Sie die Welt mit der Funktion big-bang zum Leben.
 
-(big-bang state (to-draw renderScene) (on-tick nextState! FRAME_RATE) )
+(big-bang state (to-draw drawWorld) (on-tick nextState FRAME_RATE) )
 
 
 ;;; 2.5 Zusatzaufgabe: Spielfeldrand
