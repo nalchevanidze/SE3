@@ -92,6 +92,33 @@ allCards
 ;;; (1 g r e en r e c t a n g l e s o l i d ) ) ) −→ #f
 
 
+(define (is-a-set? ls) 
+    (list 
+        (map card-count ls)
+        (map card-shape ls)
+        (map card-fill ls)
+        (map card-color ls)
+    )
+) 
+
+
+(is-a-set?
+    (list 
+        (card 3 'wave 'solid 'green)
+        (card 3 'wave 'hatched 'red)
+        (card 3 'wave 'hatched 'blue)
+    )
+)
+
+
+;;; (define (is−a−set? ls) 
+;;;     map (list 
+;;;         (map card-count)
+;;;         ()
+;;;         ()
+;;;         ()
+;;;     )
+;;; ) 
 
 ;;; 4. Zusatzaufgabe: 7 ZusatzZiehen Sie aus den 81 Spielkarten zufällig zwölf Karten, wie dies auch pnkt.
 ;;; im realen Spiel passiert. Zeichnen sie ein Bild der zwölf Karten. Finden
