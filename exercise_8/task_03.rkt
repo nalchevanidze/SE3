@@ -48,24 +48,20 @@
 
 (show-set-card 3 'oval 'solid 'red)
 
-(define (flatMap f ls)    
-    (flatten (map f ls))
+(define (flatMap f)    
+    (compose flatten (curry map f))
 )
 
-(define (genterateWith attr ls)  
-    (flatMap 
-        (curryr map attr)
-        ls
-    )
+(define (genterateWith attr)  
+    (flatMap (curryr map attr))
 )
 
-(define (generateAll ls) 
-    (genterateWith colors  
-        (genterateWith fills 
-            (genterateWith shapes
-                (genterateWith counts ls)
-            )
-        )
+(define generateAll 
+    (compose 
+        (genterateWith colors)  
+        (genterateWith fills) 
+        (genterateWith shapes) 
+        (genterateWith counts)
     )
 )
 
