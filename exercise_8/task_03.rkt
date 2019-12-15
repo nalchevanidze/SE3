@@ -14,8 +14,8 @@
 
 ;;; 1. Entwerfen und implementieren Sie die Repräsentation der verfügbaren
 ;;; Ausprägungen einer Spielkarte, und bedenken Sie dabei bereits die
-;;; folgenden Schritte (z.B. dass sich Funktionen höherer Ordnung leichter auf Listen als auf andere Strukturen anwenden lassen). Fahren Sie
-;;; anschlieÿend mit der Repräsentation einer Spielkarte fort.
+;;; folgenden Schritte (z.B. dass sich Funktionen höherer Ordnung leichter auf Listen als auf andere Strukturen anwenden lassen). 
+;; Fahren Sie  anschlieÿend mit der Repräsentation einer Spielkarte fort.
 
 
 (define shape '('oval 'rectange 'wave))
