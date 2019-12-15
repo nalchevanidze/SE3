@@ -19,13 +19,13 @@
 ;; Fahren Sie  anschlieÿend mit der Repräsentation einer Spielkarte fort.
 
 
-(define shape '('oval 'rectange 'wave))
+(define shapes '('oval 'rectange 'wave))
 
-(define color '('red 'blue 'green))
+(define colors '('red 'blue 'green))
 
-(define count '(1 2 3))  
+(define counts '(1 2 3))  
 
-(define fill '('outline 'solid 'hatched))  
+(define fills '('outline 'solid 'hatched))  
 
 (struct card (shape color count fill) #:inspector #f) 
 
@@ -47,6 +47,25 @@
 ;;; ; t h e−c o l o r : ' red , ' green , ' b l u e
 
 (show-set-card 3 'oval 'solid 'red)
+
+(define (flatMap f ls)    
+    (flatten (map f ls))
+)
+
+(define (genterateWith attr ls)  
+    (flatMap 
+        (curryr map attr)
+        ls
+    )
+)
+
+(genterateWith fills 
+    (genterateWith counts 
+        (genterateWith colors
+            (map (curry card) shapes)
+        )
+    )
+)
 
 
 ;;; 3. Schreiben Sie eine Funktion, die für drei Spielkarten bestimmt, ob es 
