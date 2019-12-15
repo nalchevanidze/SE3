@@ -59,15 +59,17 @@
     )
 )
 
-(genterateWith colors  
-    (genterateWith fills 
-        (genterateWith shapes
-            (map (curry card) counts)
+(define (generateAll ls) 
+    (genterateWith colors  
+        (genterateWith fills 
+            (genterateWith shapes
+                (genterateWith counts ls)
+            )
         )
     )
 )
 
-
+(generateAll (list (curry card)))
 ;;; 3. Schreiben Sie eine Funktion, die für drei Spielkarten bestimmt, ob es 
 ;;; sich bei diesen um ein SET handelt oder nicht. Testen sie diese Funktion
 ;;; mit manuell ausgewählten Karten des Spiels, die Sie im vorigen Schritt
