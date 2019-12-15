@@ -19,17 +19,15 @@
 ;; Fahren Sie  anschlieÿend mit der Repräsentation einer Spielkarte fort.
 
 
-(define shapes '('oval 'rectange 'wave))
+(define shapes (list 'oval 'rectange 'wave))
 
-(define colors '('red 'blue 'green))
+(define colors (list 'red 'blue 'green))
 
-(define counts '(1 2 3))  
+(define counts (list 1 2 3))  
 
-(define fills '('outline 'solid 'hatched))  
+(define fills (list 'outline 'solid 'hatched))  
 
 (struct card (count shape fill color) #:inspector #f) 
-
-
 
 ;;; 2. Erzeugen Sie die Menge (Liste) aller 81 Spielkarten, aus denen das
 ;;; Kartenspiel besteht. Achten Sie dabei auf die Wiederverwendung von definierten 
@@ -46,7 +44,7 @@
 ;;; ; the−mode: ' o u t l i n e , ' s o l i d , ' h a tc he d
 ;;; ; t h e−c o l o r : ' red , ' green , ' b l u e
 
-(show-set-card 3 'oval 'solid 'red)
+
 
 (define (flatMap f)    
     (compose flatten (curry map f))
@@ -65,7 +63,23 @@
     )
 )
 
-(generateAll (list (curry card)))
+(define allCards  
+    (generateAll (list (curry card)))
+)
+
+allCards
+
+(define (drawCard x) 
+    (show-set-card 
+        (card-count x)
+        (card-shape x)
+        (card-fill x)  
+        (card-color x)
+    )
+)
+
+(map drawCard allCards)
+
 ;;; 3. Schreiben Sie eine Funktion, die für drei Spielkarten bestimmt, ob es 
 ;;; sich bei diesen um ein SET handelt oder nicht. Testen sie diese Funktion
 ;;; mit manuell ausgewählten Karten des Spiels, die Sie im vorigen Schritt
