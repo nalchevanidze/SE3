@@ -27,7 +27,7 @@
 
 (define fills '('outline 'solid 'hatched))  
 
-(struct card (shape color count fill) #:inspector #f) 
+(struct card (count shape fill color) #:inspector #f) 
 
 
 
@@ -59,10 +59,10 @@
     )
 )
 
-(genterateWith fills 
-    (genterateWith counts 
-        (genterateWith colors
-            (map (curry card) shapes)
+(genterateWith colors  
+    (genterateWith fills 
+        (genterateWith shapes
+            (map (curry card) counts)
         )
     )
 )
