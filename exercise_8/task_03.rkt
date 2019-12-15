@@ -46,7 +46,7 @@
 ;;; ; the−mode: ' o u t l i n e , ' s o l i d , ' h a tc he d
 ;;; ; t h e−c o l o r : ' red , ' green , ' b l u e
 
-(show-set-card 1 'oval 'solid 'red)
+(show-set-card 3 'oval 'solid 'red)
 
 
 ;;; 3. Schreiben Sie eine Funktion, die für drei Spielkarten bestimmt, ob es 
