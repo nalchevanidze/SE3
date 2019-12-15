@@ -1,5 +1,6 @@
 #lang racket
 
+(require se3-bib/setkarten-module) 
 
 ;;; 3 Spieltheorie: Das Kartenspiel SET!
 
@@ -24,7 +25,7 @@
 
 (define count '(1 2 3))  
 
-(define fill '('line 'hatching 'space))  
+(define fill '('outline 'solid 'hatched))  
 
 (struct card (shape color count fill) #:inspector #f) 
 
@@ -45,6 +46,7 @@
 ;;; ; the−mode: ' o u t l i n e , ' s o l i d , ' h a tc he d
 ;;; ; t h e−c o l o r : ' red , ' green , ' b l u e
 
+(show-set-card 1 'oval 'solid 'red)
 
 
 ;;; 3. Schreiben Sie eine Funktion, die für drei Spielkarten bestimmt, ob es 
