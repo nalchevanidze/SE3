@@ -1,6 +1,7 @@
 #lang racket
 
 (require se3-bib/setkarten-module) 
+(require racket/set)
 
 ;;; 3 Spieltheorie: Das Kartenspiel SET!
 
@@ -91,15 +92,32 @@ allCards
 ;;; (2 g r e en r e c t a n g l e o u t l i n e )
 ;;; (1 g r e en r e c t a n g l e s o l i d ) ) ) −→ #f
 
-
-(define (is-a-set? ls) 
-    (list 
-        (map card-count ls)
-        (map card-shape ls)
-        (map card-fill ls)
-        (map card-color ls)
+;; returns numbers of disjnctive features for each feature
+(define (cards->sizes ls) 
+    (map 
+        (compose set-count list->set) 
+        (list 
+            (map card-count ls)
+            (map card-shape ls)
+            (map card-fill ls)
+            (map card-color ls)
+        )
     )
 ) 
+
+(define (satisfies? size)
+    (or 
+        (eq? 3 size) 
+        (eq? 1 size)
+    )
+)
+
+(define is-a-set? 
+     (compose 
+        (curry andmap satisfies?)
+        cards->sizes
+    )
+)
 
 
 (is-a-set?
@@ -111,14 +129,6 @@ allCards
 )
 
 
-;;; (define (is−a−set? ls) 
-;;;     map (list 
-;;;         (map card-count)
-;;;         ()
-;;;         ()
-;;;         ()
-;;;     )
-;;; ) 
 
 ;;; 4. Zusatzaufgabe: 7 ZusatzZiehen Sie aus den 81 Spielkarten zufällig zwölf Karten, wie dies auch pnkt.
 ;;; im realen Spiel passiert. Zeichnen sie ein Bild der zwölf Karten. Finden
