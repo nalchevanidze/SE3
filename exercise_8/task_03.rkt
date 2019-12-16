@@ -68,8 +68,6 @@
     (generateAll (list (curry card)))
 )
 
-allCards
-
 (define (drawCard x) 
     (show-set-card 
         (card-count x)
@@ -145,14 +143,26 @@ allCards
 ;;; sie alle möglichen SETs, die in den aktuellen zwölf Karten vorkommen
 ;;; und geben Sie diese aus.
 
-(define (randomIndexes size) 
+(define (gen-indexes size) 
     (for/list ([i (in-range size)])
         (random 0 80)
     )
 )
 
 (define (takeRandom size) 
-    (map (curry list-ref allCards) (randomIndexes size))
+    (map (curry list-ref allCards) (gen-indexes size))
 )
 
-(draw-all (takeRandom 12))
+(define select-valid-sets 
+    (compose 
+        (curry filter is-a-set?) 
+        (curryr combinations 3)
+    )
+)
+
+(define random-12-cards (takeRandom 12))
+(draw-all random-12-cards)
+
+(select-valid-sets random-12-cards)
+
+(map draw-all (select-valid-sets random-12-cards))
