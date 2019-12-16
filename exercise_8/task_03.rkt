@@ -145,7 +145,6 @@ allCards
 ;;; sie alle möglichen SETs, die in den aktuellen zwölf Karten vorkommen
 ;;; und geben Sie diese aus.
 
-
 (define (randomIndexes size) 
     (for/list ([i (in-range size)])
         (random 0 80)
@@ -156,9 +155,4 @@ allCards
     (map (curry list-ref allCards) (randomIndexes size))
 )
 
-
-
 (draw-all (takeRandom 12))
-
-;;(#f #f -2147483647 -114 0 -1.0 #f #f #f 0)
-
