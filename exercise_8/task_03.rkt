@@ -136,9 +136,6 @@ allCards
     )
 )
 
-
-
-
 ;;; 4. Zusatzaufgabe: 7 ZusatzZiehen Sie aus den 81 Spielkarten zufällig zwölf Karten, wie dies auch pnkt.
 ;;; im realen Spiel passiert. Zeichnen sie ein Bild der zwölf Karten. Finden
 ;;; sie alle möglichen SETs, die in den aktuellen zwölf Karten vorkommen
