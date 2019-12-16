@@ -79,7 +79,11 @@ allCards
     )
 )
 
-(map drawCard allCards)
+(define draw-all 
+    (curry map drawCard)
+)
+
+(draw-all allCards)
 
 ;;; 3. Schreiben Sie eine Funktion, die für drei Spielkarten bestimmt, ob es 
 ;;; sich bei diesen um ein SET handelt oder nicht. Testen sie diese Funktion
@@ -154,7 +158,7 @@ allCards
 
 
 
-(takeRandom 12)
+(draw-all (takeRandom 12))
 
 ;;(#f #f -2147483647 -114 0 -1.0 #f #f #f 0)
 
