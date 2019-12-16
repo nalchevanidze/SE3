@@ -128,6 +128,15 @@ allCards
     )
 )
 
+(is-a-set?
+    (list 
+        (card 3 'wave 'solid 'green)
+        (card 3 'wave 'outline 'red)
+        (card 3 'wave 'hatched 'blue)
+    )
+)
+
+
 
 
 ;;; 4. Zusatzaufgabe: 7 ZusatzZiehen Sie aus den 81 Spielkarten zufällig zwölf Karten, wie dies auch pnkt.
