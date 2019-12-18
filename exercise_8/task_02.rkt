@@ -32,6 +32,11 @@
 
 ;3. Geben Sie einen Ausdruck an, der die Summe der geraden Zahlen größer 6 in xs ermittelt.
 
+(define (sum-of-x>6 xs) 
+    (foldr + 0 (filter (curry < 6) xs))
+) 
+
+(sum-of-x>6 (range 10))
 
 ;4. Zusatzaufgabe: Geben Sie einen Ausdruck an, welcher eine Liste anhand eines Prädikats (z.B. odd?) in zwei Teillisten aufspaltet und zurückgibt.
 
