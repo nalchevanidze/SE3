@@ -20,7 +20,7 @@
 ;; Fahren Sie  anschlieÿend mit der Repräsentation einer Spielkarte fort.
 
 
-(define shapes (list 'oval 'rectange 'wave))
+(define shapes (list 'oval 'rectange 'waves))
 
 (define colors (list 'red 'blue 'green))
 
@@ -46,13 +46,12 @@
 ;;; ; t h e−c o l o r : ' red , ' green , ' b l u e
 
 
-;; flatMap :: [a -> b -> ... -> n]  -> [a] -> [b -> ... -> n]
 (define (flatMap f)    
     (compose flatten (curry map f))
 )
 
 ;; adds next feature variations to existing feature list 
-;; genterateWith:: [a -> ... -> m -> n]  -> [n] -> [a -> ... -> m]
+;; genterateWith:: [a -> b ->... -> n]  -> [a] -> [b -> ... -> n]
 (define (genterateWith attr)  
     (flatMap (curryr map attr))
 )
@@ -123,7 +122,7 @@
     )
 )
 
-;; is-a-set? :: Card ->  Bool
+;; is-a-set? :: [Card] ->  Bool
 (define is-a-set? 
      (compose 
         (curry andmap satisfies?)
