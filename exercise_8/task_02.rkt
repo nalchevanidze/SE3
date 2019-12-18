@@ -14,12 +14,16 @@
 
 (define (tailbar? x)
     (and 
+        ;; check x != 0
         (< 0 x) 
-        (ormap (compose 
-            (curry eq? 0) 
-            (curry modulo x) 
-        ) 
-        (list 7 3))
+        (ormap 
+            ;; module ls == 0
+            (compose 
+                (curry eq? 0) 
+                (curry modulo x) 
+            ) 
+            (list 7 3)
+        )
     )
 )
 
@@ -33,7 +37,9 @@
 ;3. Geben Sie einen Ausdruck an, der die Summe der geraden Zahlen größer 6 in xs ermittelt.
 
 (define (sum-of-x>6 xs) 
-    (foldr + 0 (filter (curry < 6) xs))
+    (foldr + 0 
+        (filter (curry < 6) xs)
+    )
 ) 
 
 (sum-of-x>6 (range 10))
@@ -41,7 +47,10 @@
 ;4. Zusatzaufgabe: Geben Sie einen Ausdruck an, welcher eine Liste anhand eines Prädikats (z.B. odd?) in zwei Teillisten aufspaltet und zurückgibt.
 
 (define (my-partition f xs) 
-    (list (filter f xs) (filter (compose not f) xs))
+    (list 
+        (filter f xs) 
+        (filter (compose not f) xs)
+    )
 ) 
 
 (my-partition even? (range 10))

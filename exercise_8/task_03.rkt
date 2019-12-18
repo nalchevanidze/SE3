@@ -46,15 +46,18 @@
 ;;; ; t h e−c o l o r : ' red , ' green , ' b l u e
 
 
-
+;; flatMap :: [a -> b -> ... -> n]  -> [a] -> [b -> ... -> n]
 (define (flatMap f)    
     (compose flatten (curry map f))
 )
 
+;; adds next feature variations to existing feature list 
+;; genterateWith:: [a -> ... -> m -> n]  -> [n] -> [a -> ... -> m]
 (define (genterateWith attr)  
     (flatMap (curryr map attr))
 )
 
+;;; generateAll :: [count -> shape -> fill -> color -> Card ] -> [Card]
 (define generateAll 
     (compose 
         (genterateWith colors)  
@@ -64,10 +67,13 @@
     )
 )
 
+
+;; allCards :: [Card]
 (define allCards  
     (generateAll (list (curry card)))
 )
 
+;; drawCard :: Card -> 2DCard
 (define (drawCard x) 
     (show-set-card 
         (card-count x)
@@ -77,10 +83,12 @@
     )
 )
 
+;; drawCard :: [Card] -> [2DCard]
 (define draw-all 
     (curry map drawCard)
 )
 
+;; drawCard :: [2DCard]
 (draw-all allCards)
 
 ;;; 3. Schreiben Sie eine Funktion, die für drei Spielkarten bestimmt, ob es 
@@ -95,6 +103,7 @@
 ;;; (1 g r e en r e c t a n g l e s o l i d ) ) ) −→ #f
 
 ;; returns numbers of disjnctive features for each feature
+;; cards->sizes :: [Card] -> [[distinct size ::  Int]]
 (define (cards->sizes ls) 
     (map 
         (compose set-count list->set) 
@@ -106,7 +115,7 @@
         )
     )
 ) 
-
+;; satisfies? :: Card ->  Bool
 (define (satisfies? size)
     (or 
         (eq? 3 size) 
@@ -114,6 +123,7 @@
     )
 )
 
+;; is-a-set? :: Card ->  Bool
 (define is-a-set? 
      (compose 
         (curry andmap satisfies?)
@@ -143,16 +153,22 @@
 ;;; sie alle möglichen SETs, die in den aktuellen zwölf Karten vorkommen
 ;;; und geben Sie diese aus.
 
+
+;; generates list numbers between 0 80 
+;; is-a-set? :: [Int]
 (define (gen-indexes size) 
     (for/list ([i (in-range size)])
         (random 0 80)
     )
 )
 
+;; takes random list of size : fox example 12 
+;; takeRandom :: Int -> [Card]
 (define (takeRandom size) 
     (map (curry list-ref allCards) (gen-indexes size))
 )
 
+;; select-valid-sets :: [Card] -> [Card]
 (define select-valid-sets 
     (compose 
         (curry filter is-a-set?) 
