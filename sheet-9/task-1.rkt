@@ -1,4 +1,9 @@
-#lang racket
+#lang swindle
+
+(require 
+    swindle/setf 
+    swindle/misc 
+)
 
 ;;; 1 CLOS und generische Funktionen
 
@@ -12,15 +17,95 @@
 ;;; • das Erscheinungsjahr sowie
 ;;; • den Titel der Veröffentlichung.
 
+(define 
+  (uniq-key name date)
+  (string-append name (number->string date))
+)
+
+(defclass Video ()
+    (key 
+        :reader get-key
+        :initarg :init-key
+    )
+    (name
+        :reader get-name
+        :initarg :init-name
+    )
+    (date 
+        :reader get-date
+        :initarg :init-date
+    )
+    (title 
+        :reader get-title
+        :initarg :init-title
+    )
+    :printer #t
+    :documentation "video class"
+)
+
+
+
+
+
 ;;; Je nach Art der Veröffentlichung sind weitere Angaben nötig, um auf das
 ;;; Werk bezug nehmen zu können:
 
 ;;; Film: Für ein Film werden zuätzlich Angaben zur Produktionsgesellschaft,
 ;;; zum Regisseur, dem Genre und der Altersfreigabe benötigt.
+
+(defclass Film (Video)
+    (produktionsgesellschaft
+        :reader get-produktionsgesellschaft
+        :initarg :init-produktionsgesellschaft
+    )
+    (regisseur
+        :reader get-regisseur
+        :initarg :init-regisseur
+    )
+    (genre
+        :reader get-genre
+        :initarg :init-genre
+    )
+    (altersfreigabe
+        :reader get-altersfreigabe
+        :initarg :init-altersfreigabe
+    )
+)
+
+
+
 ;;; Serie: Zusätzlich zu den Filmangaben: Name der Platform, Nummer der
 ;;; Folge.
 
+(defclass Serie (Film) 
+    (platform
+        :reader get-platform
+        :initarg :init-platform
+    )
+    (episode
+        :reader get-episode
+        :initarg :init-episode
+    )
+)
+
+
 ;;; YouTube-Video: Der Name der Kanals, Link zum Video, eventuell der Erscheinungsmonat.
+
+
+(defclass Youtube (Video)
+    (channel
+        :reader get-date
+        :initarg :init-channel
+    )
+    (link
+        :reader get-date
+        :initarg :init-link
+    )
+    (erscheinungsmonat
+        :reader get-date
+        :initarg :init-erscheinungsmonat
+    )
+)
 
 ;;; Erzeugen Sie Objekte für die folgende Bibliographie:
 
@@ -28,10 +113,43 @@
 ;;; Produktionsgesellschaft: Walt Disney Pictures. Genre: Abenteuer. Altersfreigabe: PG-13.
 ;;; Ein Beispiel für ein Film
 
+(define example-film 
+    (make Film 
+        :init-key (uniq-key "Disney’s Mulan" 2020 )
+        :init-name "Disney’s Mulan (2020)"
+        :init-date 2020
+        :init-title "Disney’s Mulan"
+
+        :init-produktionsgesellschaft "Walt Disney Pictures"
+        :init-regisseur "Niki Caro"
+        :init-genre "Abenteuer"
+        :init-altersfreigabe "PG-13"
+    )
+)
+
+
 ;;; 2. Disneys Große Pause (1997). Erstellt/produziert von: Paul Germain,
 ;;; Joe Ansolabehere. Produktionsgesellschaft: Walt Disney Television Animation. 
 ;;; Genre: Dramedy. Altersfreigabe: FSK 0. Platform: ABC. Folge: 1.
 ;;; Ein Beispiel für eine Serie
+
+
+(define example-serie 
+    (make Serie 
+        :init-key (uniq-key "Disneys Große Pause" 1997 )
+        :init-name "Disneys Große Pause (1997)"
+        :init-date 1997
+        :init-title "Disneys Große Pause"
+
+        :init-produktionsgesellschaft "Walt Disney Television Animation"
+        :init-regisseur "Paul Germain, Joe Ansolabehere"
+        :init-genre "Dramedy"
+        :init-altersfreigabe "FSK 0"
+
+        :init-platform "ABC"
+        :init-episode 1
+    )
+)
 
 ;;; 3. Spending Over $1,000 to RENEW my Annual Pass for Walt Disney
 ;;; World. Erstellt von: Brayden Holness. Kanal: Mickey Views - All Things
@@ -39,6 +157,24 @@
 ;;; Erschienen: Juni 2019.
 ;;; Ein Beispiel für ein YouTube-Video
 
+(define example-youtube 
+    (make Youtube 
+        :init-key (uniq-key "Spending Over $1,000 to RENEW my Annual Pass for Walt Disney" 1997 )
+        :init-name "Spending Over $1,000 to RENEW my Annual Pass for Walt Disney"
+        :init-date 2019
+        :init-title "Spending Over $1,000 to RENEW my Annual Pass for Walt Disney"
+
+        :init-channel "Mickey Views - All Things Disney News"
+        :init-link "https://www.youtube.com/watch?v=TDnBjVGv5eQ"
+        :init-erscheinungsmonat "Juni"
+    )
+)
+
+(displayln example-film)
+
+(displayln example-serie)
+
+(displayln example-youtube)
 
 ;;; 1.2 Generische Funktionen und Methoden (5pkt)
 
