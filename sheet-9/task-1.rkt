@@ -94,15 +94,15 @@
 
 (defclass Youtube (Video)
     (channel
-        :reader get-date
+        :reader get-channel
         :initarg :init-channel
     )
     (link
-        :reader get-date
+        :reader get-link
         :initarg :init-link
     )
     (erscheinungsmonat
-        :reader get-date
+        :reader get-erscheinungsmonat
         :initarg :init-erscheinungsmonat
     )
 )
@@ -171,18 +171,100 @@
 )
 
 (displayln example-film)
-
+(displayln "")
 (displayln example-serie)
-
+(displayln "")
 (displayln example-youtube)
-
+(displayln "")
 ;;; 1.2 Generische Funktionen und Methoden (5pkt)
+
+
 
 ;;; Definieren Sie eine generische Funktion cite, die ein Videobeitrag-Objekt als
 ;;; Argument erhält und für diesen Beitrag einen String mit dem korrekten Zitat
 ;;; erzeugt.
 ;;; Implementieren Sie geeignete Methoden für die generische Funktion cite
 ;;; und erproben Sie diese an den obigen Beispielen.
+
+(defgeneric cite ((Video))
+  :combination generic-append-combination
+)
+
+(defmethod cite ((v Film))
+    (list 
+        (string-append 
+            (get-name v) 
+            ". "
+            
+            "Regie: "
+            (get-regisseur v)
+            ". "
+
+            "Produktionsgesellschaft: "
+            (get-produktionsgesellschaft  v)
+            ". "
+
+            "Genre: "
+            (get-genre v)
+            ". "
+
+            "Altersfreigabe: "
+            (get-altersfreigabe v)
+            ". "
+        )
+    )
+)
+
+(defmethod cite ((v Serie))
+    (list 
+        (string-append 
+            "Platform: "
+            (get-platform v)
+            ". "
+
+            "Folge: "
+            (number->string (get-episode v))
+            ". "
+        )
+    )
+)
+
+
+
+(defmethod cite ((v Youtube))
+    (list 
+        (string-append 
+            (get-name v) 
+            ". "
+            
+            "Kanal: "
+            (get-channel v)
+            ". "
+
+            "Link: "
+            (get-link  v)
+            ". "
+
+            "Erschienen: "
+            (get-erscheinungsmonat v)
+            " "
+            (number->string (get-date v))
+        )
+    )
+)
+
+;;; 3. Spending Over $1,000 to RENEW my Annual Pass for Walt Disney
+;;; World. Erstellt von: Brayden Holness. Kanal: Mickey Views - All Things
+;;; Disney News. Link: https://www.youtube.com/watch?v=TDnBjVGv5eQ.
+;;; Erschienen: Juni 2019.
+;;; Ein Beispiel für ein YouTube-Video
+
+(displayln (cite example-film))
+(displayln "")
+(displayln (cite example-serie))
+(displayln "")
+(displayln (cite example-youtube))
+(displayln "")
 
 ;;; 1.3 Ergänzungsmethoden (5 Pnkt)
 
