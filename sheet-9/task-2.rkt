@@ -1,40 +1,11 @@
-#lang racket
+#lang swindle
+
+(require 
+    swindle/setf 
+    swindle/misc 
+)
 
 ;; 2 CLOS und Vererbung
-
-
-;;; 2.1 Definition von Klassen (5 punkt)
-
-;;; In dieser Aufgabe sollen Sie spezielle Hierarchie von Tieren modellieren.
-;;; Zeichnen Sie unbedingt einen Vererbungsgraphen.
-;;; Bitte modellieren Sie folgendes:
-
-
-;;; 1. Definieren Sie als CLOS-Klasse eine Klasse von Tieren und spezialisieren Sie diese Klassen für unterschiedliche Lebensräume, in denen sich
-;;; die Tiere bewegen:
-;;; • Landtiere, die unterschieden werden können in:
-;;; – Arboreal (auf Bäumen lebend)
-;;; – Saxicolous (auf Steinen lebend),
-;;; – Arenicolous (im Sand lebend),
-;;; – Troglofauna (in Höhlen lebend).
-;;; • Meerestiere und
-;;; • flugfähige Lufttiere
-
-
-
-;;; 2. Definieren Sie zudem Klassen von Tieren, die sich in unterschiedlichen
-;;; Lebensräumen aufhalten:
-;;; • Eine Amphibie, die sich zu Wasser und zu Land bewegt,
-;;; • ein Klasse von Tieren wie Libellen, die sich auf dem Land, im
-;;; Wasser oder aber (bevorzugt) in der Luft bewegen können,
-;;; • ein flugfähiges Landtier, das sowohl auf dem Boden als auch in
-;;; der Luft überleben kann,
-;;; • ein (fantasie) Fisch, der wie Vögel fliegen kann
-
-
-;;; Modellieren Sie zunächst nur die (leeren) Klassen inklusive der Vererbungshierarchie. 
-;;; Modellierungen von generischen Methoden oder Slots werden explizit erst in den nächsten 
-;;; beiden Aufgaben von Ihnen abgefragt.
 
 
 ;; 2.2 Operationen und Methodenkombination (5 punkt)
@@ -49,6 +20,111 @@
 ;;; Spezifizieren Sie generische Funktionen als Signatur für die Operationen der
 ;;; Klasse Tier und diskutieren Sie, welche Methodenkombination für die 
 ;;; jeweilige Operation sinnvoll erscheint.
+
+
+
+(defclass Tier ()
+    (living-space
+        :reader get-living-space
+    )
+    (max-speed
+        :reader get-max-speed
+    )
+    (danger
+        :reader get-danger
+    )
+    (food-per-week
+        :reader get-food-per-week
+    )
+    (life-expectancy
+        :reader get-life-expectancy
+    )
+    :printer #t
+    :documentation "Tier"
+)
+
+
+;;; 2.1 Definition von Klassen (5 punkt)
+
+;;; In dieser Aufgabe sollen Sie spezielle Hierarchie von Tieren modellieren.
+;;; Zeichnen Sie unbedingt einen Vererbungsgraphen.
+;;; Bitte modellieren Sie folgendes:
+
+
+
+
+
+;;; 1. Definieren Sie als CLOS-Klasse eine Klasse von Tieren und spezialisieren Sie diese Klassen für unterschiedliche Lebensräume, in denen sich
+;;; die Tiere bewegen:
+;;; • Landtiere, die unterschieden werden können in:
+;;; – Arboreal (auf Bäumen lebend)
+;;; – Saxicolous (auf Steinen lebend),
+;;; – Arenicolous (im Sand lebend),
+;;; – Troglofauna (in Höhlen lebend).
+;;; • Meerestiere und
+;;; • flugfähige Lufttiere
+
+;; -- Oberclassen
+(defclass Landtiere (Tier)
+    :documentation "auf Land lebend"
+)
+
+
+(defclass Meerestiere (Tier)
+    ::documentation "in Meer lebend"
+)
+
+(defclass Lufttiere (Tier)
+    ::documentation "flugfähige tiere"
+)
+
+;; -- Landtiere/**
+(defclass Arboreal (Landtiere)
+    :documentation "auf Bäumen lebend"
+)
+
+(defclass Saxicolous (Landtiere)
+    :documentation "auf Steinen lebend"
+)
+
+(defclass Arenicolous (Landtiere)
+    :documentation "im Sand lebend"
+)
+
+(defclass Troglofauna (Landtiere)
+    :documentation "in Höhlen lebend"
+)
+
+;;; 2. Definieren Sie zudem Klassen von Tieren, die sich in unterschiedlichen
+;;; Lebensräumen aufhalten:
+;;; • Eine Amphibie, die sich zu Wasser und zu Land bewegt,
+;;; • ein Klasse von Tieren wie Libellen, die sich auf dem Land, im
+;;; Wasser oder aber (bevorzugt) in der Luft bewegen können,
+;;; • ein flugfähiges Landtier, das sowohl auf dem Boden als auch in
+;;; der Luft überleben kann,
+;;; • ein (fantasie) Fisch, der wie Vögel fliegen kann
+
+;;; Modellieren Sie zunächst nur die (leeren) Klassen inklusive der Vererbungshierarchie. 
+;;; Modellierungen von generischen Methoden oder Slots werden explizit erst in den nächsten 
+;;; beiden Aufgaben von Ihnen abgefragt.
+
+
+(defclass Amphibie (Landtiere Meerestiere)
+    :documentation "die sich zu Wasser und zu Land bewegt"
+)
+
+(defclass HybridTiere (Lufttiere Landtiere Meerestiere )
+    :documentation "die sich auf dem Land, im Wasser oder aber (bevorzugt) in der Luft bewegen können"
+)
+
+(defclass FuftLandTier (Landtiere Lufttiere)
+    :documentation "ein flugfähiges Landtier, das sowohl auf dem Boden als auch in der Luft überleben kann"
+)
+
+(defclass GoldenFish (Meerestiere Lufttiere)
+    :documentation "ein (fantasie) Fisch, der wie Vögel fliegen kann."
+)
+
 
 
 
