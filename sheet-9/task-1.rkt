@@ -190,27 +190,25 @@
   :combination generic-append-combination
 )
 
+
+(define (render l f v)
+  (string-append 
+        l 
+        ": "
+        (f v)
+        ". "
+  )
+)
+
 (defmethod cite ((v Film))
     (list 
         (string-append 
             (get-name v) 
             ". "
-            
-            "Regie: "
-            (get-regisseur v)
-            ". "
-
-            "Produktionsgesellschaft: "
-            (get-produktionsgesellschaft  v)
-            ". "
-
-            "Genre: "
-            (get-genre v)
-            ". "
-
-            "Altersfreigabe: "
-            (get-altersfreigabe v)
-            ". "
+            (render "Regie" get-regisseur v)
+            (render "Produktionsgesellschaft" get-produktionsgesellschaft  v)
+            (render "Genre" get-genre v)
+            (render "Altersfreigabe" get-altersfreigabe v)
         )
     )
 )
@@ -218,47 +216,29 @@
 (defmethod cite ((v Serie))
     (list 
         (string-append 
-            "Platform: "
-            (get-platform v)
-            ". "
-
-            "Folge: "
-            (number->string (get-episode v))
-            ". "
+            (render "Platform" get-platform v)
+            (render "Folge" (compose number->string get-episode) v)
         )
     )
 )
-
-
 
 (defmethod cite ((v Youtube))
     (list 
         (string-append 
             (get-name v) 
             ". "
-            
-            "Kanal: "
-            (get-channel v)
-            ". "
-
-            "Link: "
-            (get-link  v)
-            ". "
-
+            (render "Kanal" get-channel v)
+            (render "Link" get-link v)
             "Erschienen: "
             (get-erscheinungsmonat v)
             " "
             (number->string (get-date v))
+            ". "
         )
     )
 )
 
-;;; 3. Spending Over $1,000 to RENEW my Annual Pass for Walt Disney
-;;; World. Erstellt von: Brayden Holness. Kanal: Mickey Views - All Things
-;;; Disney News. Link: https://www.youtube.com/watch?v=TDnBjVGv5eQ.
-;;; Erschienen: Juni 2019.
-;;; Ein Beispiel für ein YouTube-Video
-
+(displayln "-------------- CITE -------------")
 (displayln (cite example-film))
 (displayln "")
 (displayln (cite example-serie))
@@ -275,3 +255,53 @@
 ;;; Beschreiben Sie weiterhin, wie Ergänzungsmethoden in ihrer Modellierung der 
 ;;; Aufgabenstellung verwendet werden könnten. Wie müssten Sie das
 ;;; Programm umstrukturieren, um den sinnvollen Einsatz von Ergänzungsmethoden zu erlauben?
+
+
+(defmethod cite2 ((v Film))
+    (display 
+        (string-append 
+            (get-name v) 
+            ". "
+            (render "Regie" get-regisseur v)
+            (render "Produktionsgesellschaft" get-produktionsgesellschaft  v)
+            (render "Genre" get-genre v)
+            (render "Altersfreigabe" get-altersfreigabe v)
+        )
+    )
+)
+
+(defmethod cite2 :after ((v Serie))
+    (display 
+        (string-append 
+            (render "Platform" get-platform v)
+            (render "Folge" (compose number->string get-episode) v)
+        )
+    )
+)
+
+(defmethod cite2 ((v Youtube))
+    (display 
+        (string-append 
+            (get-name v) 
+            ". "
+            (render "Kanal" get-channel v)
+            (render "Link" get-link v)
+            "Erschienen: "
+            (get-erscheinungsmonat v)
+            " "
+            (number->string (get-date v))
+            ". "
+        )
+    )
+)
+
+(displayln "-------------- CITE2 -------------")
+(cite2 example-film)
+(displayln "")
+(displayln "")
+(cite2 example-serie)
+(displayln "")
+(displayln "")
+(cite2 example-youtube)
+(displayln "")
+(displayln "")
