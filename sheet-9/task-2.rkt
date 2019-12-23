@@ -8,41 +8,30 @@
 ;; 2 CLOS und Vererbung
 
 
-;; 2.2 Operationen und Methodenkombination (5 punkt)
-
-
-;;; Die Klasse Tier soll folgende Operationen bieten:
-;;; 1. Abfrage des Lebensraumes, in dem sich das Tier bewegt,
-;;; 2. Abfrage der Maximalgeschwindigkeit,
-;;; 3. Abfrage der Gefährlichkeit für den Menschen,
-;;; 4. Abfrage des Verbrauchs an Nahrung pro Woche und
-;;; 5. Abfrage der Lebenserwartung.
-;;; Spezifizieren Sie generische Funktionen als Signatur für die Operationen der
-;;; Klasse Tier und diskutieren Sie, welche Methodenkombination für die 
-;;; jeweilige Operation sinnvoll erscheint.
-
-
-
 (defclass Tier ()
-    (living-space
-        :reader get-living-space
+    (habitat
+        :reader get-habitat
+        :initarg :init-habitat
     )
     (max-speed
         :reader get-max-speed
+        :initarg :init-max-speed
     )
     (danger
         :reader get-danger
+        :initarg :init-danger
     )
-    (food-per-week
-        :reader get-food-per-week
+    (food-consumption-per-week
+        :reader get-food-consumption-per-week
+        :initarg :init-food-consumption-per-week
     )
     (life-expectancy
         :reader get-life-expectancy
+        :initarg :init-life-expectancy
     )
     :printer #t
     :documentation "Tier"
 )
-
 
 ;;; 2.1 Definition von Klassen (5 punkt)
 
@@ -126,7 +115,46 @@
 )
 
 
+;; 2.2 Operationen und Methodenkombination (5 punkt)
 
+
+;;; Die Klasse Tier soll folgende Operationen bieten:
+;;; 1. Abfrage des Lebensraumes, in dem sich das Tier bewegt,
+;;; 2. Abfrage der Maximalgeschwindigkeit,
+;;; 3. Abfrage der Gefährlichkeit für den Menschen,
+;;; 4. Abfrage des Verbrauchs an Nahrung pro Woche und
+;;; 5. Abfrage der Lebenserwartung.
+;;; Spezifizieren Sie generische Funktionen als Signatur für die Operationen der
+;;; Klasse Tier und diskutieren Sie, welche Methodenkombination für die 
+;;; jeweilige Operation sinnvoll erscheint.
+
+
+
+(defgeneric habitat (Tier)  
+  ;; weil wir alle lebensräume brauchen
+  :combination generic-append-combination
+)
+
+(defgeneric max-speed (Tier)
+  ;; nimt die maximale gschwiendeigkeit von unterschiedliche bedingugnen
+  :combination generic-max-combination
+)
+
+(defgeneric danger-level (Tier)
+  ;; Gefährlichkeit in jedem bedingugnen
+  :combination generic-append-combination
+)
+
+
+(defgeneric food-consumption (Tier)
+  ;; pessimistische schätzung von nahrungsverbrauchts
+  :combination generic-max-combination
+)
+
+(defgeneric life-expectancy (Tier)
+  ;; pessimistische schätzung von Lebenserwartung
+  :combination generic-min-combination
+)
 
 ;;; 2.3 Klassenpräzedenz bei Mehrfachvererbung (10 punkt)
 
