@@ -9,22 +9,6 @@
 
 
 (defclass Tier ()
-    (speed
-        :reader get-speed
-        :initarg :init-speed
-    )
-    (danger
-        :reader get-danger
-        :initarg :init-danger
-    )
-    (food-consumption-per-week
-        :reader get-food-consumption-per-week
-        :initarg :init-food-consumption-per-week
-    )
-    (life-expectancy
-        :reader get-life-expectancy
-        :initarg :init-life-expectancy
-    )
     :printer #t
     :documentation "Tier"
 )
@@ -34,10 +18,6 @@
 ;;; In dieser Aufgabe sollen Sie spezielle Hierarchie von Tieren modellieren.
 ;;; Zeichnen Sie unbedingt einen Vererbungsgraphen.
 ;;; Bitte modellieren Sie folgendes:
-
-
-
-
 
 ;;; 1. Definieren Sie als CLOS-Klasse eine Klasse von Tieren und spezialisieren Sie diese Klassen für unterschiedliche Lebensräume, in denen sich
 ;;; die Tiere bewegen:
@@ -51,20 +31,36 @@
 
 ;; -- Oberclassen
 (defclass Landtiere (Tier)
+    (speed-land
+        :reader get-speed-land
+        :initarg :init-speed-land
+    )
     :documentation "auf Land lebend"
 )
 
 
 (defclass Meerestiere (Tier)
+    (speed-water
+        :reader get-speed-water
+        :initarg :init-speed-water
+    )
     ::documentation "in Meer lebend"
 )
 
 (defclass Lufttiere (Tier)
+    (speed-air
+        :reader get-speed-air
+        :initarg :init-speed-air
+    )
     ::documentation "flugfähige tiere"
 )
 
 ;; -- Landtiere/**
 (defclass Arboreal (Landtiere)
+    (speed-tree
+        :reader get-speed-tree
+        :initarg :init-speed-tree
+    )
     :documentation "auf Bäumen lebend"
 )
 
@@ -73,6 +69,10 @@
 )
 
 (defclass Arenicolous (Landtiere)
+    (speed-sand
+        :reader get-speed-sand
+        :initarg :init-speed-sand
+    )
     :documentation "im Sand lebend"
 )
 
@@ -126,28 +126,28 @@
 
 
 
-(defgeneric habitat (Tier)  
+(defgeneric habitat ((Tier))  
   ;; weil wir alle lebensräume brauchen
   :combination generic-append-combination
 )
 
-(defgeneric max-speed (Tier)
+(defgeneric max-speed ((Tier))  
   ;; nimt die maximale gschwiendeigkeit von unterschiedliche bedingugnen
   :combination generic-max-combination
 )
 
-(defgeneric danger-level (Tier)
+(defgeneric danger-level ((Tier))  
   ;; Gefährlichkeit in jedem bedingugnen
   :combination generic-append-combination
 )
 
 
-(defgeneric food-consumption (Tier)
+(defgeneric food-consumption ((Tier))  
   ;; pessimistische schätzung von nahrungsverbrauchts
   :combination generic-max-combination
 )
 
-(defgeneric life-expectancy (Tier)
+(defgeneric life-expectancy ((Tier))  
   ;; pessimistische schätzung von Lebenserwartung
   :combination generic-min-combination
 )
@@ -166,30 +166,85 @@
 ;;; Warum ist diese hier unerlässlich?
 
 
-(define example-hybridtier 
-    (make Hybridtier
-        :init-speed ""
-        :init-danger ""
-        :init-food-consumption-per-week ""
-        :init-life-expectancy ""
-    )
-)
-
-
-(defmethod habitat (Landtiere)
+(defmethod habitat ((v Landtiere))
     (list "Land")
 )
 
-(defmethod habitat (Meerestiere) 
+(defmethod habitat ((v Meerestiere)) 
     (list "Wasser")
 )
 
-(defmethod habitat (Lufttiere) 
+(defmethod habitat ((v Lufttiere)) 
     (list "Luft")
 )
 
-(defmethod habitat (Hybridtier) 
-    (list "alle")
+(defmethod habitat ((v Arboreal))
+    (list "Bäumen")
 )
 
-(display (habitat example-hybridtier))
+(defmethod habitat ((v Saxicolous))
+    (list "Steinen")
+)
+
+(defmethod habitat ((v Arenicolous))
+    (list "Sand")
+)
+
+(defmethod habitat ((v Troglofauna))
+    (list "Höehle")
+)
+
+;; MAX_SPEED
+
+(defmethod max-speed ((v Landtiere))
+    (get-speed-land v)
+)
+
+(defmethod max-speed ((v Lufttiere))
+    (get-speed-air v)
+)
+
+(defmethod max-speed ((v Meerestiere))
+    (get-speed-water v)
+)
+
+
+(defmethod max-speed ((v Arboreal))
+    (get-speed-tree v)
+)
+
+(defmethod max-speed ((v Saxicolous))
+    (get-speed-land v)
+)
+
+(defmethod max-speed ((v Arenicolous))
+    (get-speed-sand v)
+)
+
+(defmethod max-speed ((v Troglofauna))
+    (get-speed-land v)
+)
+
+
+(define example-hybridtier 
+    (make Hybridtier
+        :init-speed-land  10
+        :init-speed-water 15
+        :init-speed-air   50
+    )
+)
+
+(displayln (habitat example-hybridtier))
+(displayln (max-speed example-hybridtier))
+
+
+
+(define example-monkey 
+    (make Arboreal
+        :init-speed-land  10
+        :init-speed-tree  15
+    )
+)
+
+(displayln (habitat example-monkey))
+(displayln (max-speed example-monkey))
