@@ -256,8 +256,11 @@
 ;;; Aufgabenstellung verwendet werden könnten. Wie müssten Sie das
 ;;; Programm umstrukturieren, um den sinnvollen Einsatz von Ergänzungsmethoden zu erlauben?
 
+(defmethod cite2  ((Video))
+  :combination generic-append-combination
+)
 
-(defmethod cite2 ((v Film))
+(defmethod cite2 :after ((v Film))
     (display 
         (string-append 
             (get-name v) 
@@ -279,7 +282,7 @@
     )
 )
 
-(defmethod cite2 ((v Youtube))
+(defmethod cite2 :after ((v Youtube))
     (display 
         (string-append 
             (get-name v) 
