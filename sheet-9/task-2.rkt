@@ -29,54 +29,85 @@
 ;;; • Meerestiere und
 ;;; • flugfähige Lufttiere
 
+;; 2.3 Max Speed implementation via accessor
+
+(defgeneric speed ((Tier))  
+  ;; nimt die maximale gschwiendeigkeit von unterschiedliche bedingugnen
+  :combination generic-max-combination
+)
+
+;; Habitat implementation via accessor
+
+(defgeneric habitat ((Tier))  
+  ;; weil wir alle lebensräume brauchen
+  :combination generic-list-combination
+)
+
 ;; -- Oberclassen
 (defclass Landtiere (Tier)
-    (speed-land
-        :reader get-speed-land
-        :initarg :init-speed-land
+    (landSpeed
+        :initarg :init-speed-land :accessor speed
     )
+     (landHabitat 
+     :initvalue "Land" :accessor habitat 
+     )
     :documentation "auf Land lebend"
 )
 
 
 (defclass Meerestiere (Tier)
-    (speed-water
-        :reader get-speed-water
-        :initarg :init-speed-water
+    (waterSpeed
+        :initarg :init-speed-water :accessor speed
     )
-    ::documentation "in Meer lebend"
+    (waterHabitat 
+     :initvalue 'Sea :accessor habitat 
+     )
+    :documentation "in Meer lebend"
 )
 
 (defclass Lufttiere (Tier)
-    (speed-air
-        :reader get-speed-air
-        :initarg :init-speed-air
+    (airSpeed
+        :initarg :init-speed-air :accessor speed
     )
-    ::documentation "flugfähige tiere"
+    (airHabitat 
+     :initvalue 'Air :accessor habitat    
+     )
+    :documentation "flugfähige tiere"
 )
 
 ;; -- Landtiere/**
 (defclass Arboreal (Landtiere)
-    (speed-tree
-        :reader get-speed-tree
-        :initarg :init-speed-tree
+    (treeSpeed
+        :initarg :init-speed-tree :accessor speed
     )
+    (treeHabitat 
+     :initvalue "Trees" :accessor habitat 
+     )
     :documentation "auf Bäumen lebend"
 )
 
 (defclass Saxicolous (Landtiere)
+(stoneHabitat 
+     :initvalue 'Stones :accessor habitat    
+     )
     :documentation "auf Steinen lebend"
+   
 )
 
 (defclass Arenicolous (Landtiere)
-    (speed-sand
-        :reader get-speed-sand
-        :initarg :init-speed-sand
+    (sandSpeed
+        :initarg :init-speed-sand :accessor speed
     )
+    (sandHabitat 
+     :initvalue 'Sand :accessor habitat 
+     )
     :documentation "im Sand lebend"
 )
 
 (defclass Troglofauna (Landtiere)
+(caveHabitat 
+     :initvalue 'Cave :accessor habitat 
+     )   
     :documentation "in Höhlen lebend"
 )
 
@@ -125,17 +156,6 @@
 ;;; jeweilige Operation sinnvoll erscheint.
 
 
-
-(defgeneric habitat ((Tier))  
-  ;; weil wir alle lebensräume brauchen
-  :combination generic-append-combination
-)
-
-(defgeneric max-speed ((Tier))  
-  ;; nimt die maximale gschwiendeigkeit von unterschiedliche bedingugnen
-  :combination generic-max-combination
-)
-
 (defgeneric danger-level ((Tier))  
   ;; Gefährlichkeit in jedem bedingugnen
   :combination generic-append-combination
@@ -165,79 +185,17 @@
 ;;; Verwenden und beschreiben Sie hierzu auch den Begriff der Klassenpräzedenzliste.
 ;;; Warum ist diese hier unerlässlich?
 
-
-(defmethod habitat ((v Landtiere))
-    (list "Land")
-)
-
-(defmethod habitat ((v Meerestiere)) 
-    (list "Wasser")
-)
-
-(defmethod habitat ((v Lufttiere)) 
-    (list "Luft")
-)
-
-(defmethod habitat ((v Arboreal))
-    (list "Bäumen")
-)
-
-(defmethod habitat ((v Saxicolous))
-    (list "Steinen")
-)
-
-(defmethod habitat ((v Arenicolous))
-    (list "Sand")
-)
-
-(defmethod habitat ((v Troglofauna))
-    (list "Höehle")
-)
-
-;; MAX_SPEED
-
-(defmethod max-speed ((v Landtiere))
-    (get-speed-land v)
-)
-
-(defmethod max-speed ((v Lufttiere))
-    (get-speed-air v)
-)
-
-(defmethod max-speed ((v Meerestiere))
-    (get-speed-water v)
-)
-
-
-(defmethod max-speed ((v Arboreal))
-    (get-speed-tree v)
-)
-
-(defmethod max-speed ((v Saxicolous))
-    (get-speed-land v)
-)
-
-(defmethod max-speed ((v Arenicolous))
-    (get-speed-sand v)
-)
-
-(defmethod max-speed ((v Troglofauna))
-    (get-speed-land v)
-)
+(define (printMaxNumberSpeed v vName)
+(displayln (string-append vName " MaxSpeed: " (number->string (speed v)))))
 
 
 (define example-hybridtier 
     (make Hybridtier
-        :init-speed-land  10
+        :init-speed-land  20
         :init-speed-water 15
         :init-speed-air   50
     )
 )
-
-(displayln (habitat example-hybridtier))
-(displayln (max-speed example-hybridtier))
-
-
 
 (define example-monkey 
     (make Arboreal
@@ -246,5 +204,12 @@
     )
 )
 
+(printMaxNumberSpeed example-hybridtier "HybridTier")
+(displayln (habitat example-hybridtier))
+(printMaxNumberSpeed example-monkey "Monkey")
 (displayln (habitat example-monkey))
-(displayln (max-speed example-monkey))
+
+
+
+
+
