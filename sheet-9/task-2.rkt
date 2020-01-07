@@ -49,7 +49,7 @@
         :initarg :init-speed-land :accessor speed
     )
      (landHabitat 
-     :initvalue "Land" :accessor habitat 
+     :initvalue 'Land :accessor habitat 
      )
     :documentation "auf Land lebend"
 )
@@ -81,7 +81,7 @@
         :initarg :init-speed-tree :accessor speed
     )
     (treeHabitat 
-     :initvalue "Trees" :accessor habitat 
+     :initvalue 'Trees :accessor habitat 
      )
     :documentation "auf Bäumen lebend"
 )
