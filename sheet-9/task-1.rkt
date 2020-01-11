@@ -191,11 +191,11 @@
 )
 
 
-(define (render l f v)
+(define (render label f value)
   (string-append 
-        l 
+        label 
         ": "
-        (f v)
+        (f value)
         ". "
   )
 )
@@ -229,7 +229,7 @@
             ". "
             (render "Kanal" get-channel v)
             (render "Link" get-link v)
-            "Erschienen: "
+            "ErschienunJahr: "
             (get-erscheinungsmonat v)
             " "
             (number->string (get-date v))
