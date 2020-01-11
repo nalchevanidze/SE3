@@ -1,3 +1,5 @@
+#lang racket
+
 ;;; 1. Sudoku
 ;;;
 ;;; Sudoku ist eine Gattung von Logikrätseln, in denen es darum geht, 
