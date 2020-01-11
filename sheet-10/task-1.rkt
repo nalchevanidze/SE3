@@ -52,7 +52,7 @@
 ;;; 
 
 ;;;     1. Definieren Sie eine Hilfsfunktion (xy->index x y) 
-;;;     mit der Sie zwi- schen der Darstellung x= Spalte, y=Zeile 
+;;;     mit der Sie zwischen der Darstellung x= Spalte, y=Zeile 
 ;;;     und der Darstellung als Index in der Spielzustandsrepräsentation 
 ;;;     wechseln können:
 ;;;
@@ -62,6 +62,16 @@
 ;;;     (xy−>index 8 8) --> 80
 ;;;     ```
 
+(define (xy−>index x y) 
+  (+ (* 9 x) y)
+)
+
+(display "expected: 0 is ")
+(xy−>index 0 0)
+(display "expected: 12 is ")
+(xy−>index 3 1) 
+(display "expected: 80 is ")
+(xy−>index 8 8)
 
 ;;;     2. Definieren Sie drei Funktionen, die Ihnen jeweils Zugriff 
 ;;;     auf die Indizes der Zeilen, Spalten und Quadranten des 
