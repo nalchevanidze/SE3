@@ -83,14 +83,12 @@
 ;;;     (quadrant−>indizes 8) --> ’(60 61 62 69 70 71 78 79 80)
 ;;;     ```
 
-
-
 (define (zeile->indizes index) 
   (filter 
       (lambda x 
         (and 
           (< x (xy−>index index 0))
-          (< x (xy−>index index 0)) 
+          (< x (xy−>index index 9)) 
         )
       ) 
   spiel)
