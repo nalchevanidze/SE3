@@ -145,3 +145,26 @@
 ;;;       • Setze die Zahlen auf die ermittelten Positionen.
 ;;;       • Falls keine Positionen ermittelt werden konnten, 
 ;;;          brich ab - das Rätsel ist ohne Backtracking nicht lösbar.
+
+
+;;; 1.3 Grafische Ausgabe
+;;; –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+;;; Um dem Benutzer die Sicht auf die Spielzustände zu erleichtern, 
+;;; bietet es sich an, eine grafische Darstellung mittels 
+;;; des Pakets (require 2htdp/image) zu implementieren.
+;;; 
+;;;     1. Schreiben Sie eine Funktion zeichne-spiel, die einen 
+;;;       Spielzustand grafisch anzeigt. Annotierte Spielfelder (siehe 1.2.2) 
+;;;       sollten als leere Fel- der mit rotem Hintergrund dargestellt werden, 
+;;;       nicht ausgefüllte Felder als leere Felder mit weißem 
+;;;       Hintergrund dargestellt werden.
+;;;       Alle anderen Spielfelder zeigen die eingetragene 
+;;;       Zahl vor weißem Hintergrund.
+;;;
+;;;     2. Zusatzaufgabe: Schreiben Sie eine Funktion loese-spiel-grafisch, 
+;;;       die für jeden Schritt das erzielte Zwischenergebnis anzeigt. 
+;;;       Wenn Sie mögen. können Sie auch einen weiteren 
+;;;       Parameter integrieren, der die Zwischenergebnisse 
+;;;       (ähnlich zur Darstellung auf Seite 2) ausblendet. 
+;;;       Zum Testen Ihrer Lösung finden Sie eine beispielhafte Abbildung 
+;;;       direkt unter dieser Aufgabenstellung.
