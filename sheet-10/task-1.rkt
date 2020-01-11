@@ -83,14 +83,28 @@
 ;;;     (quadrant−>indizes 8) --> ’(60 61 62 69 70 71 78 79 80)
 ;;;     ```
 
-(define (zeile->indizes index) #(0))
+
+
+(define (zeile->indizes index) 
+  (filter 
+      (lambda x 
+        (and 
+          (< x (xy−>index index 0))
+          (< x (xy−>index index 0)) 
+        )
+      ) 
+  spiel)
+)
+
 (define (spalte−>indizes index) #(0))
 (define (quadrant−>indizes index) #(0))
 
 (display "(zeile->indizes 0) --> ’(0 1 2 3 4 5 6 7 8) ")
 (zeile->indizes 0)
+
 (display "(spalte−>indizes 5) --> ’(5 14 23 32 41 50 59 68 77) ")
 (spalte−>indizes 5)
+
 (display "(quadrant−>indizes 8) --> ’(60 61 62 69 70 71 78 79 80) ")
 (quadrant−>indizes 8)
 
