@@ -382,34 +382,42 @@ cell-0-indexes
   (list->set 
     (flatten 
       (list 
-        (feature->inconsistant-indexes 5 row->idx spiel)
-        (feature->inconsistant-indexes 5 column->idx spiel)
-        (feature->inconsistant-indexes 5 cell->idx spiel)
+        (feature->inconsistant-indexes num row->idx state)
+        (feature->inconsistant-indexes num column->idx state)
+        (feature->inconsistant-indexes num cell->idx state)
       )
     )
   )
 )
 
-(inconsistant-indexes 5 spiel)
+;;; (inconsistant-indexes 5 spiel)
 
-;;; (define (is-game−consistent? state)
-;;;    (andmap 
-;;;     ((curryr is-feature-consistent?) state) 
-;;;     (list 
-;;;       row->idx
-;;;       column->idx
-;;;       cell->idx
-;;;     )
-;;;   )
-;;; )
+(define (visit-cell index state) 
+  (if (eq? (vector-ref state index)  0)
+      (vector-set! state index 'X)
+      '()
+  )
+)
 
+(define (mark-inconsistent num state)
+  (let* 
+    (
+        [
+          nextState (vector-copy state)
+        ]
+        [
+          incons-xs (set->list (inconsistant-indexes num state))
+        ]
+        [ replace-values (map ((curryr visit-cell) nextState) incons-xs) ]
+    )
+    nextState
+  )
+)
 
-;;; (define (mark-exclusion state i) 
-;;;   (
+(mark-inconsistent 5 spiel)
 
-;;;   )
-;;; )
-
+;;; (mark-inconsistent 5 spiel)
+; (vector-map ((curry +) 10 )  spiel)
 
 
 ;;;     2. Ausgehend von dem annotierten Spielfeld können Sie nun
