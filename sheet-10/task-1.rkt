@@ -83,9 +83,6 @@
 ;;;     (quadrant−>indizes 8) --> ’(60 61 62 69 70 71 78 79 80)
 ;;;     ```
 
-(define sample (range 0 9))  
-
-
 (define (indexes f size index) 
   (map 
     (f index)
@@ -124,16 +121,33 @@
   (floor (/ index 3))
 )
 
+(define (cell->start-index index)
+  (+ (* 27 (cell->row index)) (cell->column index))
+)
+
 ;; test cell->column and cell->row
 (map cell->column (range 0 9))
 (map cell->row (range 0 9))
+(map cell->start-index (range 0 9))
+
+(define shift-cell 
+  (compose (curry +) cell->start-index)
+) 
 
 ;; test sq row
 
 (define (quadrant−>indizes index) 
   (map
-    ((curry +) (* 9 index)) 
-    (column->indexes 3 0)
+    (shift-cell index) 
+    (flatten
+      (map 
+          (compose 
+            ((curryr map) (range 0 3))  
+            (curry +)
+          )
+          (column->indexes 3 0)
+      )
+    )
   )
 )
 
