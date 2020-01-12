@@ -221,7 +221,37 @@ cell-0-indexes
   )
 )
 
+(displayln "(omit-empty '(0 0 5 0 0 0 0 0 8)): ")
 (omit-empty '(0 0 5 0 0 0 0 0 8))
+
+(define (has-no-duplicate? ls) 
+  (eq? 
+      (length ls)  
+      (set-count (list->set ls))
+  )
+)
+
+(displayln "(has-no-duplicate? '(5 5 8)): ")
+(has-no-duplicate? '(5 5 8))
+(displayln "(has-no-duplicate? '(5 8)): ")
+(has-no-duplicate? '(5 8))
+
+
+(define is−set-konsistent?
+  (compose has-no-duplicate? omit-empty)
+)
+
+(displayln "(is−set-konsistent? '(0 0 5 0 0 0 0 0 8)): ")
+(is−set-konsistent? '(0 0 5 0 0 0 0 0 8))
+(displayln "(is−set-konsistent? '(0 0 5 0 0 8 0 0 8))): ")
+(is−set-konsistent? '(0 0 5 0 0 8 0 0 8))
+
+
+(define spiel−konsistent?
+  (compose has-no-duplicate? omit-empty)
+)
+
+
 
 
 ;;;     ( spiel−konsistent? spiel ) --> #t 
