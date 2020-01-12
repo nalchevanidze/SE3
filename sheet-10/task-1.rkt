@@ -526,6 +526,7 @@ cell-0-indexes
 ;;;          brich ab - das Rätsel ist ohne Backtracking nicht lösbar.
 
 
+
 ;;; 1.3 Grafische Ausgabe
 ;;; –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 ;;; Um dem Benutzer die Sicht auf die Spielzustände zu erleichtern, 
