@@ -268,6 +268,22 @@ cell-0-indexes
 (displayln "are squeres consistent?: ")
 (is-feature-consistent? quadrant−>idx spiel)
 
+
+
+(define (is-filled? state)
+  (eq? 
+    (length state ) 
+    (length (omit-empty state))
+  )
+) 
+
+(displayln "is-filled? '(0 1 1 2): ")
+(is-filled? '(0 1 1 2))
+(displayln "is-filled? '(5 1 1 2): ")
+(is-filled? '(5 1 1 2))
+
+
+
 (define (is-game−consistent? state)
    (andmap 
     ((curryr is-feature-consistent?) state) 
@@ -280,10 +296,21 @@ cell-0-indexes
   )
 )
 
-(displayln "is game consistent?: ")
+(displayln "is game consistent?: expected #t")
 (is-game−consistent? spiel)
 
-;;;     ( spiel−konsistent? spiel ) --> #t 
+
+(define (is-game−solved? state)
+  (and 
+    (is-filled? (vector->list state))
+    (is-game−consistent? state)
+  )
+)
+
+(displayln "is game solved?: expected #f")
+(is-game−solved? spiel)
+
+
 ;;;     (spiel−geloest? spiel) −→ #f
 
 ;;; 1.2 Sudoku lösen (ohne Backtracking)
