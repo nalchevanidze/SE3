@@ -268,12 +268,20 @@ cell-0-indexes
 (displayln "are squeres consistent?: ")
 (is-feature-consistent? quadrant−>idx spiel)
 
-;;; (define spiel−konsistent?
-;;;   (andmap '(has-no-duplicate? omit-empty))
-;;; )
+(define (is-game−consistent? state)
+   (andmap 
+    ((curryr is-feature-consistent?) state) 
+    (list 
+      zeile->indizes
+      spalte−>indizes 
+      quadrant−>idx
+    )
+    
+  )
+)
 
-
-
+(displayln "is game consistent?: ")
+(is-game−consistent? spiel)
 
 ;;;     ( spiel−konsistent? spiel ) --> #t 
 ;;;     (spiel−geloest? spiel) −→ #f
