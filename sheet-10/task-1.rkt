@@ -581,7 +581,10 @@ cell-0-indexes
 
 
 (define (fill-state-iteration state)
-  (if (has-solutions? spiel)
+  (if (and 
+        (has-solutions? state)
+        (is-game−consistent? state)
+      )
       (foldr fill-num  state (range 0 10))
       (raise "das Rätsel ist ohne Backtracking nicht lösbar." #t)
   )
@@ -589,6 +592,15 @@ cell-0-indexes
 
 (fill-state-iteration spiel)
 
+
+(define (solve-game state) 
+  (if (is-game−solved? state)
+    state
+    (solve-game (fill-state-iteration state))
+  )
+) 
+
+(solve-game spiel)
 ;;; 1.3 Grafische Ausgabe
 ;;; –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 ;;; Um dem Benutzer die Sicht auf die Spielzustände zu erleichtern, 
