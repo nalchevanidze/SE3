@@ -310,9 +310,6 @@ cell-0-indexes
 (displayln "is game solved?: expected #f")
 (is-game−solved? spiel)
 
-
-;;;     (spiel−geloest? spiel) −→ #f
-
 ;;; 1.2 Sudoku lösen (ohne Backtracking)
 ;;; ------------------------------------------------------
 ;;; Um Sudoku-Spieler zu unterstützen, hatte Eva sich überlegt eine 
