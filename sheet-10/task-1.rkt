@@ -12,7 +12,12 @@
 
 (define (id x) x)
 
-
+(define is-first-null 
+  (compose 
+    ((curry eq?) 0) 
+    car
+  )
+)
 
 ;;; 1. Sudoku
 ;;;
@@ -459,27 +464,33 @@ cell-0-indexes
   )
 )
 
-(define is-null 
-  (compose 
-    ((curry eq?) 0) 
-    car
-  )
-)
+
 
 (define collect-empty 
-  ((curry filter) is-null)
+  ((curry filter) is-first-null)
 )
 
 (displayln "(collect-empty  '('(0 1) '(2 3)))")
 (collect-empty (list (list 0 1) (list 2 3)))
 
 
-(define (feature->free-places f state)
+(define (feature->free-pos f state)
   (map 
     collect-empty
     (feature->map f state)
   )
 )
+
+(define (feature->definitely-pos f num state)
+  (map 
+    id
+    (feature->free-pos f state)
+  )
+)
+
+(displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
+(display (feature->definitely-pos cell->idx 5 (mark-inconsistent 5 spiel)))
+
 
 (define (handle v) v
   ;;; ( if (eq? 1 (length (collect-empty values)))
@@ -487,9 +498,6 @@ cell-0-indexes
 
   ;;; )
 )
-
-(displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
-(display (feature->free-places cell->idx (mark-inconsistent 5 spiel)))
 
 
 
