@@ -19,6 +19,12 @@
   )
 )
 
+(define not-null? 
+  (
+    lambda (x) (not (null? x))
+  )
+)
+
 (define (singleton? xs)
   (eq? 1 (length xs))
 )
@@ -526,6 +532,62 @@ cell-0-indexes
 ;;;          brich ab - das Rätsel ist ohne Backtracking nicht lösbar.
 
 
+(define (has-solutions? state) 
+  (not-null? 
+    (flatten 
+      (map
+        ((curryr definitely-positions) state)  
+        (range 0 10)
+      )
+    )
+  )
+)
+
+(displayln "has solutions")
+(has-solutions? spiel)
+
+
+(define (fill-selected! value xs state) 
+  (map 
+      (lambda (x) (vector-set! state x value))
+      xs
+  )
+)
+
+(define (set-num-at value pos state)
+  (let* 
+    (
+        [
+          nextState (vector-copy state)
+        ]
+        [ new-values (fill-selected! value pos nextState) ]
+    )
+    nextState
+  )
+)
+
+(displayln "(set-num-at 5 (list 0 1 2) #(0 0 0 0 0))")
+(set-num-at 5 (list 0 1 2) #(0 0 0 0 0))
+
+(define (fill-num num state)  
+  (set-num-at
+      num 
+      (definitely-positions  num state) 
+      state 
+  )
+)
+
+(fill-num 5 spiel) 
+
+
+(define (fill-state-iteration state)
+  (if (has-solutions? spiel)
+      (foldr fill-num  state (range 0 10))
+      (raise "das Rätsel ist ohne Backtracking nicht lösbar." #t)
+  )
+)
+
+(fill-state-iteration spiel)
 
 ;;; 1.3 Grafische Ausgabe
 ;;; –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
