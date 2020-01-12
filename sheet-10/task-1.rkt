@@ -164,7 +164,7 @@
 cell-0-indexes
 
 ;;; Int -> [Int]
-(define (quadrant−>indizes index) 
+(define (quadrant−>idx index) 
   (map
     (shift-cell index)  
     cell-0-indexes
@@ -177,17 +177,28 @@ cell-0-indexes
 (displayln "(spalte−>indizes 5) --> ’(5 14 23 32 41 50 59 68 77) ")
 (spalte−>indizes 5)
 
-(displayln "(quadrant−>indizes 8) --> ’(60 61 62 69 70 71 78 79 80) ")
-(quadrant−>indizes 8)
+(displayln "(quadrant−>idx 8) --> ’(60 61 62 69 70 71 78 79 80) ")
+(quadrant−>idx 8)
 
 ;;;     3. Definieren Sie eine Funktion, die ausgehend von einem 
 ;;;     Spielzustand und einer Indexmenge die Einträge des 
 ;;;     Spielzustands ermittelt:
 ;;; 
 ;;;     ```
-;;;     ( spiel−>eintraege spiel (quadrant−>idx 8)) --> ’(005000008)
+;;;     ( spiel−>eintraege spiel (quadrant−>idx 8)) --> ’(0 0 5 0 0 0 0 0 8)
 ;;;     ```
  
+
+(define (spiel−>eintraege spiel xs) 
+  (map 
+    ((curry vector-ref) spiel)
+    xs
+  )
+)
+
+(displayln "( spiel−>eintraege spiel (quadrant−>idx 8)) --> ’(0 0 5 0 0 0 0 0 8) ")
+(spiel−>eintraege spiel (quadrant−>idx 8))
+
 ;;;     4. Definieren Sie ausgehend von einem Spielzustand Funktionen, 
 ;;;     die unter Anwendung der logischen Regeln prüfen, ob ein Spielzustand 
 ;;;     insgesamt konsistent oder gelöst ist. Beachten Sie, 
