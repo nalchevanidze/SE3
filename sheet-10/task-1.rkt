@@ -1,5 +1,38 @@
 #lang racket
 
+
+
+;;; Helpers 
+
+(define (withArs f)
+  (lambda pos   
+    (flatten (list (f pos) pos)) 
+  )
+)
+
+(define (id x) x)
+
+(define is-first-null 
+  (compose 
+    ((curry eq?) 0) 
+    car
+  )
+)
+
+(define not-null? 
+  (
+    lambda (x) (not (null? x))
+  )
+)
+
+(define (singleton? xs)
+  (eq? 1 (length xs))
+)
+
+(define (unique x)
+  (set->list (list->set x))
+)
+
 ;;; 1. Sudoku
 ;;;
 ;;; Sudoku ist eine Gattung von Logikrätseln, in denen es darum geht, 
@@ -83,8 +116,7 @@
 ;;;     (quadrant−>indizes 8) --> ’(60 61 62 69 70 71 78 79 80)
 ;;;     ```
 
-;;; Int -> [Int]
-(define (indexes f size index) 
+(define (indexes-by f size index) 
   (map 
     (f index)
     (range 0 size)
@@ -92,59 +124,13 @@
 )
 
 ;;; Int -> [Int]
-(define indexes-by 
-  (curry indexes)
-)
-
-;;; Int -> [Int]
 (define row->indexes
-  (indexes-by (curry xy−>index))
+  ((curry indexes-by) (curry xy−>index))
 )
 
 ;;; Int -> [Int]
 (define column->indexes
-  (indexes-by (curryr xy−>index))
-)
-
-;;; Int -> [Int]
-(define zeile->indizes
-  (row->indexes 9)
-)
-
-;;; Int -> [Int]
-(define spalte−>indizes 
-  (column->indexes 9)
-)
-
-
-;;; get column index from cell
-;;; Int -> Int
-(define (cell->column index) 
-  (* (modulo index 3) 3)
-)
-
-;;; get row index from cell
-;;; Int -> Int
-(define (cell->row index) 
-  (floor (/ index 3))
-)
-
-;;; Int -> Int
-(define (cell->start-index index)
-  (+ (* 27 (cell->row index)) (cell->column index))
-)
-
-;; test cell->column and cell->row
-(displayln "cell -> column indexes ")
-(map cell->column (range 0 9))
-(displayln "cell -> row indexes ")
-(map cell->row (range 0 9))
-(displayln "cell -> start indexes of cell")
-(map cell->start-index (range 0 9))
-
-;;; Int -> Int
-(define shift-cell 
-  (compose (curry +) cell->start-index)
+  ((curry indexes-by) (curryr xy−>index))
 )
 
 ;;; [Int]
@@ -163,8 +149,48 @@
 (displayln "cell 0 indexes: ")
 cell-0-indexes
 
+;;; get column index from cell
+;;; Int -> Int
+(define (cell->column index) 
+  (* (modulo index 3) 3)
+)
+
+;;; get row index from cell
+;;; Int -> Int
+(define (cell->row index) 
+  (floor (/ index 3))
+)
+
+;;; Int -> Int
+(define (cell->start-index index)
+  (+ (* 27 (cell->row index)) (cell->column index))
+)
+
+;;; Int -> Int
+(define shift-cell 
+  (compose (curry +) cell->start-index)
+)
+
+;; test cell->column and cell->row
+(displayln "cell -> column indexes ")
+(map cell->column (range 0 9))
+(displayln "cell -> row indexes ")
+(map cell->row (range 0 9))
+(displayln "cell -> start indexes of cell")
+(map cell->start-index (range 0 9))
+
 ;;; Int -> [Int]
-(define (quadrant−>idx index) 
+(define row->idx
+  (row->indexes 9)
+)
+
+;;; Int -> [Int]
+(define column->idx
+  (column->indexes 9)
+)
+
+;;; Int -> [Int]
+(define (cell->idx index) 
   (map
     (shift-cell index)  
     cell-0-indexes
@@ -172,13 +198,13 @@ cell-0-indexes
 )
 
 (displayln "(zeile->indizes 0) --> ’(0 1 2 3 4 5 6 7 8) ")
-(zeile->indizes 0)
+(row->idx 0)
 
 (displayln "(spalte−>indizes 5) --> ’(5 14 23 32 41 50 59 68 77) ")
-(spalte−>indizes 5)
+(column->idx 5)
 
-(displayln "(quadrant−>idx 8) --> ’(60 61 62 69 70 71 78 79 80) ")
-(quadrant−>idx 8)
+(displayln "(cell->idx 8) --> ’(60 61 62 69 70 71 78 79 80) ")
+(cell->idx 8)
 
 ;;;     3. Definieren Sie eine Funktion, die ausgehend von einem 
 ;;;     Spielzustand und einer Indexmenge die Einträge des 
@@ -201,7 +227,7 @@ cell-0-indexes
 )
 
 (displayln "( spiel−>eintraege spiel (quadrant−>idx 8)) --> ’(0 0 5 0 0 0 0 0 8) ")
-(spiel−>eintraege spiel (quadrant−>idx 8))
+(spiel−>eintraege spiel (cell->idx 8))
 
 ;;;     4. Definieren Sie ausgehend von einem Spielzustand Funktionen, 
 ;;;     die unter Anwendung der logischen Regeln prüfen, ob ein Spielzustand 
@@ -250,28 +276,66 @@ cell-0-indexes
 (displayln "(is−set-konsistent? '(0 0 5 0 0 8 0 0 8))): ")
 (is−set-konsistent? '(0 0 5 0 0 8 0 0 8))
 
-(define (is-feature-consistent? f state)
-  (andmap 
-    (compose is−set-konsistent? (index->entry state) f)
+
+(define (feature->domain f state)
+  (map 
+    (compose  (index->entry state) f)
     (range 0 9)
   )
 )
 
+(define (is-feature-consistent? f state)
+  (andmap 
+    is−set-konsistent?
+    (feature->domain f state)
+  )
+)
+
 (displayln "are rows consistent?: ")
-(is-feature-consistent? zeile->indizes spiel)
+(is-feature-consistent? row->idx spiel)
+
 (displayln "are columns consistent?: ")
-(is-feature-consistent? spalte−>indizes spiel)
+(is-feature-consistent? column->idx spiel)
+
+(displayln "are squeres consistent?: ")
+(is-feature-consistent? cell->idx spiel)
+
+(define (is-filled? state)
+  (eq? 
+    (length state ) 
+    (length (omit-empty state))
+  )
+) 
+
+(displayln "is-filled? '(0 1 1 2): ")
+(is-filled? '(0 1 1 2))
+(displayln "is-filled? '(5 1 1 2): ")
+(is-filled? '(5 1 1 2))
+
+(define (is-game−consistent? state)
+   (andmap 
+    ((curryr is-feature-consistent?) state) 
+    (list 
+      row->idx
+      column->idx
+      cell->idx
+    )
+  )
+)
+
+(displayln "is game consistent?: expected #t")
+(is-game−consistent? spiel)
 
 
-;;; (define spiel−konsistent?
-;;;   (andmap '(has-no-duplicate? omit-empty))
-;;; )
+(define (is-game−solved? state)
+  (and 
+    (is-filled? (vector->list state))
+    (is-game−consistent? state)
+  )
+)
 
-
-
-
-;;;     ( spiel−konsistent? spiel ) --> #t 
-;;;     (spiel−geloest? spiel) −→ #f
+(displayln "is game solved?: expected #f")
+(is-game−solved? spiel)
 
 ;;; 1.2 Sudoku lösen (ohne Backtracking)
 ;;; ------------------------------------------------------
@@ -307,6 +371,88 @@ cell-0-indexes
 ;;;       gezielt mithilfe von vector-set!.
 ;;; 
 ;;;
+
+(define (elem? x xs) 
+  (not (eq? (index-of xs x) #f))
+)
+
+(define (feature-index->inconsistant-indexes num state indexes) 
+  (let* 
+    ( 
+      [
+        values (index->entry state indexes)
+      ]
+    )
+    (if (elem? num values)
+      (list indexes)
+      (list)
+    )
+  )
+)
+
+(define (feature->inconsistant-indexes num f state)
+  (flatten 
+    (map 
+      (compose  
+        (
+          (curry feature-index->inconsistant-indexes) 
+          num 
+          state
+        )
+        f
+      )
+      (range 0 9)
+    )
+  )
+)
+
+(define (inconsistant-indexes num state)
+  (list->set 
+    (flatten 
+      (list 
+        (feature->inconsistant-indexes num row->idx state)
+        (feature->inconsistant-indexes num column->idx state)
+        (feature->inconsistant-indexes num cell->idx state)
+      )
+    )
+  )
+)
+
+(define (visit-cell index state) 
+  (if (eq? (vector-ref state index)  0)
+      (vector-set! state index 'X)
+      '()
+  )
+)
+
+(define (mark-inconsistent num state)
+  (let* 
+    (
+        [
+          nextState (vector-copy state)
+        ]
+        [
+          incons-xs (set->list (inconsistant-indexes num state))
+        ]
+        [ replace-values (map ((curryr visit-cell) nextState) incons-xs) ]
+    )
+    nextState
+  )
+)
+
+(displayln #( 0 X 0 0 0 9 X 7 X 
+               X X X X 8 2 X 5 X
+               3 2 7 0 0 0 X 4 X
+               X 1 6 0 4 0 0 X X
+               X 5 X X X X 3 X X
+               X X X 0 9 0 7 X X
+               X X X 6 X X X X 5
+               8 X 2 0 0 0 X X X
+               0 X 4 2 0 0 X X 8
+           )
+)
+(mark-inconsistent 5 spiel)
+
 ;;;     2. Ausgehend von dem annotierten Spielfeld können Sie nun
 ;;;       recht einfach bestimmen, wann eine Zahl eindeutig auf eine
 ;;;       Position gesetzt werden kann. Dies ist immer dann der Fall,
@@ -318,6 +464,63 @@ cell-0-indexes
 ;;;       (eindeutige−positionen spiel 5) --> ’(2 33 72)
 ;;;       ```
 ;;;
+
+(define (feature->domain-idx f)
+  (map f (range 0 9))
+)
+
+(define (feature->map f state)
+  (map
+    ((curry map) (withArs (index->entry state)))
+    (feature->domain-idx f)
+  )
+)
+
+(define (collect-empty xs)
+  (filter is-first-null xs)
+)
+
+(displayln "(collect-empty  '('(0 1) '(2 3)))")
+(collect-empty (list (list 0 1) (list 2 3)))
+
+
+(define (feature->free-pos f state)
+  (map 
+    collect-empty
+    (feature->map f state)
+  )
+)
+
+(define (feature->def-pos f num state)
+  (map 
+      (compose cadr  car)  
+      (filter 
+        singleton?
+        (feature->free-pos f state)
+      )
+  )
+)
+
+(define (all-feature-pos i state)
+  (unique 
+    (append 
+      (feature->def-pos cell->idx i state)
+      (feature->def-pos row->idx i state)
+      (feature->def-pos column->idx i state)
+    )
+  )
+)
+
+(define (definitely-positions num state)  
+  (all-feature-pos 
+    num 
+    (mark-inconsistent num state)
+  )
+)
+
+(displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
+(definitely-positions  5 spiel)  
+
 ;;      3. Schreiben Sie eine Funktion (loese-spiel spiel), 
 ;;;       die mittels der bisher definierten Funktionen 
 ;;;       ein Sudoku ohne Backtracking löst. 
@@ -329,6 +532,75 @@ cell-0-indexes
 ;;;          brich ab - das Rätsel ist ohne Backtracking nicht lösbar.
 
 
+(define (has-solutions? state) 
+  (not-null? 
+    (flatten 
+      (map
+        ((curryr definitely-positions) state)  
+        (range 0 10)
+      )
+    )
+  )
+)
+
+(displayln "has solutions")
+(has-solutions? spiel)
+
+
+(define (fill-selected! value xs state) 
+  (map 
+      (lambda (x) (vector-set! state x value))
+      xs
+  )
+)
+
+(define (set-num-at value pos state)
+  (let* 
+    (
+        [
+          nextState (vector-copy state)
+        ]
+        [ new-values (fill-selected! value pos nextState) ]
+    )
+    nextState
+  )
+)
+
+(displayln "(set-num-at 5 (list 0 1 2) #(0 0 0 0 0))")
+(set-num-at 5 (list 0 1 2) #(0 0 0 0 0))
+
+(define (fill-num num state)  
+  (set-num-at
+      num 
+      (definitely-positions  num state) 
+      state 
+  )
+)
+
+(fill-num 5 spiel) 
+
+
+(define (fill-state-iteration state)
+  (if (and 
+        (has-solutions? state)
+        (is-game−consistent? state)
+      )
+      (foldr fill-num  state (range 0 10))
+      (raise "das Rätsel ist ohne Backtracking nicht lösbar." #t)
+  )
+)
+
+(fill-state-iteration spiel)
+
+
+(define (solve-game state) 
+  (if (is-game−solved? state)
+    state
+    (solve-game (fill-state-iteration state))
+  )
+) 
+
+(solve-game spiel)
 ;;; 1.3 Grafische Ausgabe
 ;;; –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
 ;;; Um dem Benutzer die Sicht auf die Spielzustände zu erleichtern, 
