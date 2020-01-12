@@ -83,8 +83,7 @@
 ;;;     (quadrant−>indizes 8) --> ’(60 61 62 69 70 71 78 79 80)
 ;;;     ```
 
-;;; Int -> [Int]
-(define (indexes f size index) 
+(define (indexes-by f size index) 
   (map 
     (f index)
     (range 0 size)
@@ -92,59 +91,13 @@
 )
 
 ;;; Int -> [Int]
-(define indexes-by 
-  (curry indexes)
-)
-
-;;; Int -> [Int]
 (define row->indexes
-  (indexes-by (curry xy−>index))
+  ((curry indexes-by) (curry xy−>index))
 )
 
 ;;; Int -> [Int]
 (define column->indexes
-  (indexes-by (curryr xy−>index))
-)
-
-;;; Int -> [Int]
-(define zeile->indizes
-  (row->indexes 9)
-)
-
-;;; Int -> [Int]
-(define spalte−>indizes 
-  (column->indexes 9)
-)
-
-
-;;; get column index from cell
-;;; Int -> Int
-(define (cell->column index) 
-  (* (modulo index 3) 3)
-)
-
-;;; get row index from cell
-;;; Int -> Int
-(define (cell->row index) 
-  (floor (/ index 3))
-)
-
-;;; Int -> Int
-(define (cell->start-index index)
-  (+ (* 27 (cell->row index)) (cell->column index))
-)
-
-;; test cell->column and cell->row
-(displayln "cell -> column indexes ")
-(map cell->column (range 0 9))
-(displayln "cell -> row indexes ")
-(map cell->row (range 0 9))
-(displayln "cell -> start indexes of cell")
-(map cell->start-index (range 0 9))
-
-;;; Int -> Int
-(define shift-cell 
-  (compose (curry +) cell->start-index)
+  ((curry indexes-by) (curryr xy−>index))
 )
 
 ;;; [Int]
@@ -163,8 +116,48 @@
 (displayln "cell 0 indexes: ")
 cell-0-indexes
 
+;;; get column index from cell
+;;; Int -> Int
+(define (cell->column index) 
+  (* (modulo index 3) 3)
+)
+
+;;; get row index from cell
+;;; Int -> Int
+(define (cell->row index) 
+  (floor (/ index 3))
+)
+
+;;; Int -> Int
+(define (cell->start-index index)
+  (+ (* 27 (cell->row index)) (cell->column index))
+)
+
+;;; Int -> Int
+(define shift-cell 
+  (compose (curry +) cell->start-index)
+)
+
+;; test cell->column and cell->row
+(displayln "cell -> column indexes ")
+(map cell->column (range 0 9))
+(displayln "cell -> row indexes ")
+(map cell->row (range 0 9))
+(displayln "cell -> start indexes of cell")
+(map cell->start-index (range 0 9))
+
 ;;; Int -> [Int]
-(define (quadrant−>idx index) 
+(define row->idx
+  (row->indexes 9)
+)
+
+;;; Int -> [Int]
+(define column->idx
+  (column->indexes 9)
+)
+
+;;; Int -> [Int]
+(define (cell->idx index) 
   (map
     (shift-cell index)  
     cell-0-indexes
@@ -172,13 +165,13 @@ cell-0-indexes
 )
 
 (displayln "(zeile->indizes 0) --> ’(0 1 2 3 4 5 6 7 8) ")
-(zeile->indizes 0)
+(row->idx 0)
 
 (displayln "(spalte−>indizes 5) --> ’(5 14 23 32 41 50 59 68 77) ")
-(spalte−>indizes 5)
+(column->idx 5)
 
-(displayln "(quadrant−>idx 8) --> ’(60 61 62 69 70 71 78 79 80) ")
-(quadrant−>idx 8)
+(displayln "(cell->idx 8) --> ’(60 61 62 69 70 71 78 79 80) ")
+(cell->idx 8)
 
 ;;;     3. Definieren Sie eine Funktion, die ausgehend von einem 
 ;;;     Spielzustand und einer Indexmenge die Einträge des 
@@ -201,7 +194,7 @@ cell-0-indexes
 )
 
 (displayln "( spiel−>eintraege spiel (quadrant−>idx 8)) --> ’(0 0 5 0 0 0 0 0 8) ")
-(spiel−>eintraege spiel (quadrant−>idx 8))
+(spiel−>eintraege spiel (cell->idx 8))
 
 ;;;     4. Definieren Sie ausgehend von einem Spielzustand Funktionen, 
 ;;;     die unter Anwendung der logischen Regeln prüfen, ob ein Spielzustand 
@@ -258,17 +251,13 @@ cell-0-indexes
 )
 
 (displayln "are rows consistent?: ")
-(is-feature-consistent? zeile->indizes spiel)
-
+(is-feature-consistent? row->idx spiel)
 
 (displayln "are columns consistent?: ")
-(is-feature-consistent? spalte−>indizes spiel)
-
+(is-feature-consistent? column->idx spiel)
 
 (displayln "are squeres consistent?: ")
-(is-feature-consistent? quadrant−>idx spiel)
-
-
+(is-feature-consistent? cell->idx spiel)
 
 (define (is-filled? state)
   (eq? 
@@ -282,17 +271,14 @@ cell-0-indexes
 (displayln "is-filled? '(5 1 1 2): ")
 (is-filled? '(5 1 1 2))
 
-
-
 (define (is-game−consistent? state)
    (andmap 
     ((curryr is-feature-consistent?) state) 
     (list 
-      zeile->indizes
-      spalte−>indizes 
-      quadrant−>idx
+      row->idx
+      column->idx
+      cell->idx
     )
-    
   )
 )
 
@@ -344,6 +330,10 @@ cell-0-indexes
 ;;;       gezielt mithilfe von vector-set!.
 ;;; 
 ;;;
+
+
+
+
 ;;;     2. Ausgehend von dem annotierten Spielfeld können Sie nun
 ;;;       recht einfach bestimmen, wann eine Zahl eindeutig auf eine
 ;;;       Position gesetzt werden kann. Dies ist immer dann der Fall,
