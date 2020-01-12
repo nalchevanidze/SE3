@@ -464,10 +464,8 @@ cell-0-indexes
 )
 
 (define (feature->map f state)
-  (map   
-    (
-        (curry map) (withArs (index->entry state))
-    )
+  (map
+    ((curry map) (withArs (index->entry state)))
     (feature->domain-idx f)
   )
 )
