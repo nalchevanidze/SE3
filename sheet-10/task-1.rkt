@@ -1,5 +1,19 @@
 #lang racket
 
+
+
+;;; Helpers 
+
+(define (withArs f)
+  (lambda pos   
+    (flatten (list (f pos) pos)) 
+  )
+)
+
+(define (id x) x)
+
+
+
 ;;; 1. Sudoku
 ;;;
 ;;; Sudoku ist eine Gattung von Logikrätseln, in denen es darum geht, 
@@ -431,6 +445,62 @@ cell-0-indexes
 ;;;       (eindeutige−positionen spiel 5) --> ’(2 33 72)
 ;;;       ```
 ;;;
+
+(define (feature->domain-idx f state)
+  (map f (range 0 9))
+)
+
+(define (feature->map f state)
+  (map   
+      (
+        (curry map) (withArs (index->entry state))
+      )
+      (map f (range 0 9))
+  )
+)
+
+(define is-null 
+  (compose 
+    ((curry eq?) 0) 
+    car
+  )
+)
+
+(define collect-empty 
+  ((curry filter) is-null)
+)
+
+(displayln "(collect-empty  '('(0 1) '(2 3)))")
+(collect-empty (list (list 0 1) (list 2 3)))
+
+
+(define (feature->free-places f state)
+  (map 
+    collect-empty
+    (feature->map f state)
+  )
+)
+
+(define (handle v) v
+  ;;; ( if (eq? 1 (length (collect-empty values)))
+  ;;;   filter  
+
+  ;;; )
+)
+
+(displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
+(display (feature->free-places cell->idx (mark-inconsistent 5 spiel)))
+
+
+
+(define (definitely-positions  state index)  
+  '()
+)
+
+
+(displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
+(definitely-positions  5 spiel)  
+
 ;;      3. Schreiben Sie eine Funktion (loese-spiel spiel), 
 ;;;       die mittels der bisher definierten Funktionen 
 ;;;       ein Sudoku ohne Backtracking löst. 
