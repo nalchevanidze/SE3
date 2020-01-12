@@ -19,6 +19,10 @@
   )
 )
 
+(define (singleton? xs)
+  (eq? 1 (length xs))
+)
+
 ;;; 1. Sudoku
 ;;;
 ;;; Sudoku ist eine Gattung von Logikrätseln, in denen es darum geht, 
@@ -482,24 +486,14 @@ cell-0-indexes
 )
 
 (define (feature->definitely-pos f num state)
-  (map 
-    id
+  (filter 
+    singleton?
     (feature->free-pos f state)
   )
 )
 
 (displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
-(display (feature->definitely-pos cell->idx 5 (mark-inconsistent 5 spiel)))
-
-
-(define (handle v) v
-  ;;; ( if (eq? 1 (length (collect-empty values)))
-  ;;;   filter  
-
-  ;;; )
-)
-
-
+(feature->definitely-pos cell->idx 5 (mark-inconsistent 5 spiel))
 
 (define (definitely-positions  state index)  
   '()
