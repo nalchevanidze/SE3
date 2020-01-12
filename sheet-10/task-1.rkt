@@ -340,7 +340,7 @@ cell-0-indexes
 ;;;
 
 (define (elem? x xs) 
-  (eq? (index-of xs x) #f)
+  (not (eq? (index-of xs x) #f))
 )
 
 (define (feature-index->inconsistant-indexes num state indexes) 
@@ -373,11 +373,6 @@ cell-0-indexes
   )
 )
 
-;;; (displayln "find-positions-for: 5")
-;;; (find-positions-for 5 row->idx spiel)
-;;; (find-positions-for 5 column->idx spiel)
-;;; (find-positions-for 5 cell->idx spiel)
-
 (define (inconsistant-indexes num state)
   (list->set 
     (flatten 
@@ -389,8 +384,6 @@ cell-0-indexes
     )
   )
 )
-
-;;; (inconsistant-indexes 5 spiel)
 
 (define (visit-cell index state) 
   (if (eq? (vector-ref state index)  0)
@@ -414,11 +407,18 @@ cell-0-indexes
   )
 )
 
+(displayln #( 0 X 0 0 0 9 X 7 X 
+               X X X X 8 2 X 5 X
+               3 2 7 0 0 0 X 4 X
+               X 1 6 0 4 0 0 X X
+               X 5 X X X X 3 X X
+               X X X 0 9 0 7 X X
+               X X X 6 X X X X 5
+               8 X 2 0 0 0 X X X
+               0 X 4 2 0 0 X X 8
+           )
+)
 (mark-inconsistent 5 spiel)
-
-;;; (mark-inconsistent 5 spiel)
-; (vector-map ((curry +) 10 )  spiel)
-
 
 ;;;     2. Ausgehend von dem annotierten Spielfeld können Sie nun
 ;;;       recht einfach bestimmen, wann eine Zahl eindeutig auf eine
