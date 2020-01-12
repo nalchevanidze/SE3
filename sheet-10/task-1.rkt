@@ -243,10 +243,18 @@ cell-0-indexes
 (displayln "(is−set-konsistent? '(0 0 5 0 0 8 0 0 8))): ")
 (is−set-konsistent? '(0 0 5 0 0 8 0 0 8))
 
+
+(define (feature->domain f state)
+  (map 
+    (compose  (index->entry state) f)
+    (range 0 9)
+  )
+)
+
 (define (is-feature-consistent? f state)
   (andmap 
-    (compose is−set-konsistent? (index->entry state) f)
-    (range 0 9)
+    is−set-konsistent?
+    (feature->domain f state)
   )
 )
 
@@ -331,6 +339,76 @@ cell-0-indexes
 ;;; 
 ;;;
 
+(define (elem? x xs) 
+  (eq? (index-of xs x) #f)
+)
+
+(define (feature-index->inconsistant-indexes num state indexes) 
+  (let* 
+    ( 
+      [
+        values (index->entry state indexes)
+      ]
+    )
+    (if (elem? num values)
+      (list indexes)
+      (list)
+    )
+  )
+)
+
+(define (feature->inconsistant-indexes num f state)
+  (flatten 
+    (map 
+      (compose  
+        (
+          (curry feature-index->inconsistant-indexes) 
+          num 
+          state
+        )
+        f
+      )
+      (range 0 9)
+    )
+  )
+)
+
+;;; (displayln "find-positions-for: 5")
+;;; (find-positions-for 5 row->idx spiel)
+;;; (find-positions-for 5 column->idx spiel)
+;;; (find-positions-for 5 cell->idx spiel)
+
+(define (inconsistant-indexes num state)
+  (list->set 
+    (flatten 
+      (list 
+        (feature->inconsistant-indexes 5 row->idx spiel)
+        (feature->inconsistant-indexes 5 column->idx spiel)
+        (feature->inconsistant-indexes 5 cell->idx spiel)
+      )
+    )
+  )
+)
+
+(inconsistant-indexes 5 spiel)
+
+;;; (define (is-game−consistent? state)
+;;;    (andmap 
+;;;     ((curryr is-feature-consistent?) state) 
+;;;     (list 
+;;;       row->idx
+;;;       column->idx
+;;;       cell->idx
+;;;     )
+;;;   )
+;;; )
+
+
+;;; (define (mark-exclusion state i) 
+;;;   (
+
+;;;   )
+;;; )
 
 
 
