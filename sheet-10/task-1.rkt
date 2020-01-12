@@ -211,6 +211,22 @@ cell-0-indexes
 ;;;
 ;;;
 
+(define (omit-empty ls) 
+  (filter 
+    (compose 
+      not 
+      ((curry eq?) 0)
+    ) 
+    ls
+  )
+)
+
+(omit-empty '(0 0 5 0 0 0 0 0 8))
+
+
+;;;     ( spiel−konsistent? spiel ) --> #t 
+;;;     (spiel−geloest? spiel) −→ #f
+
 ;;; 1.2 Sudoku lösen (ohne Backtracking)
 ;;; ------------------------------------------------------
 ;;; Um Sudoku-Spieler zu unterstützen, hatte Eva sich überlegt eine 
