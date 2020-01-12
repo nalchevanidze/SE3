@@ -259,9 +259,14 @@ cell-0-indexes
 
 (displayln "are rows consistent?: ")
 (is-feature-consistent? zeile->indizes spiel)
+
+
 (displayln "are columns consistent?: ")
 (is-feature-consistent? spalte−>indizes spiel)
 
+
+(displayln "are squeres consistent?: ")
+(is-feature-consistent? quadrant−>idx spiel)
 
 ;;; (define spiel−konsistent?
 ;;;   (andmap '(has-no-duplicate? omit-empty))
