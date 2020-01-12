@@ -23,6 +23,10 @@
   (eq? 1 (length xs))
 )
 
+(define (unique x)
+  (set->list (list->set x))
+)
+
 ;;; 1. Sudoku
 ;;;
 ;;; Sudoku ist eine Gattung von Logikrätseln, in denen es darum geht, 
@@ -455,23 +459,21 @@ cell-0-indexes
 ;;;       ```
 ;;;
 
-(define (feature->domain-idx f state)
+(define (feature->domain-idx f)
   (map f (range 0 9))
 )
 
 (define (feature->map f state)
   (map   
-      (
+    (
         (curry map) (withArs (index->entry state))
-      )
-      (map f (range 0 9))
+    )
+    (feature->domain-idx f)
   )
 )
 
-
-
-(define collect-empty 
-  ((curry filter) is-first-null)
+(define (collect-empty xs)
+  (filter is-first-null xs)
 )
 
 (displayln "(collect-empty  '('(0 1) '(2 3)))")
@@ -485,20 +487,32 @@ cell-0-indexes
   )
 )
 
-(define (feature->definitely-pos f num state)
-  (filter 
-    singleton?
-    (feature->free-pos f state)
+(define (feature->def-pos f num state)
+  (map 
+      (compose cadr  car)  
+      (filter 
+        singleton?
+        (feature->free-pos f state)
+      )
   )
 )
 
-(displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
-(feature->definitely-pos cell->idx 5 (mark-inconsistent 5 spiel))
-
-(define (definitely-positions  state index)  
-  '()
+(define (all-feature-pos i state)
+  (unique 
+    (append 
+      (feature->def-pos cell->idx i state)
+      (feature->def-pos row->idx i state)
+      (feature->def-pos column->idx i state)
+    )
+  )
 )
 
+(define (definitely-positions num state)  
+  (all-feature-pos 
+    num 
+    (mark-inconsistent num state)
+  )
+)
 
 (displayln "(eindeutige−positionen spiel 5) --> ’(2 33 72)")
 (definitely-positions  5 spiel)  
