@@ -196,6 +196,10 @@ cell-0-indexes
   )
 )
 
+(define index->entry 
+  (curry spiel−>eintraege)
+)
+
 (displayln "( spiel−>eintraege spiel (quadrant−>idx 8)) --> ’(0 0 5 0 0 0 0 0 8) ")
 (spiel−>eintraege spiel (quadrant−>idx 8))
 
@@ -246,10 +250,22 @@ cell-0-indexes
 (displayln "(is−set-konsistent? '(0 0 5 0 0 8 0 0 8))): ")
 (is−set-konsistent? '(0 0 5 0 0 8 0 0 8))
 
-
-(define spiel−konsistent?
-  (compose has-no-duplicate? omit-empty)
+(define (is-feature-consistent? f state)
+  (andmap 
+    (compose is−set-konsistent? (index->entry state) f)
+    (range 0 9)
+  )
 )
+
+(displayln "are rows consistent?: ")
+(is-feature-consistent? zeile->indizes spiel)
+(displayln "are columns consistent?: ")
+(is-feature-consistent? spalte−>indizes spiel)
+
+
+;;; (define spiel−konsistent?
+;;;   (andmap '(has-no-duplicate? omit-empty))
+;;; )
 
 
 
