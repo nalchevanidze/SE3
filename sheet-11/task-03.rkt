@@ -32,4 +32,4 @@
     )
 )
 
-(!! (take 100 (map flipflap (nats 1))))
+(!! (take 50 (map flipflap (nats 1))))
