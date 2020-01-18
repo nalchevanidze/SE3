@@ -23,7 +23,7 @@
     (= 0 (modulo x y))
 )
 
-(define (flipflap x)
+(define (nat->flipflap x)
     (cond
         [(and (isDiv? x 3) (isDiv? x 5)) "flipflap"]
         [(isDiv? x 5) "flap"]
@@ -32,4 +32,11 @@
     )
 )
 
-(!! (take 50 (map flipflap (nats 1))))
+(define flipflaps 
+    (map 
+        nat->flipflap 
+        (nats 1)
+    )
+)
+
+(!! (take 50 flipflaps))
