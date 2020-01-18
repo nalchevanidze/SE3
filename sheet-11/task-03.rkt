@@ -11,9 +11,9 @@
 ;;;     Definieren Sie eine Stromfunktion, die den Strom der natürlichen Zahlen erzeugt, 
 ;;;     aber die durch 3 oder 5 teilbaren Zahlen durch die entsprechenden Symbole ersetzt.
 
-(define (infiniteNats n)
+(define (nats n)
     (cons n 
-        (infiniteNats 
+        (nats 
             (+ n 1)
         )
     )
@@ -32,67 +32,4 @@
     )
 )
 
-(flipflap 15)
-(flipflap 14)
-(flipflap 13)
-(flipflap 12)
-(flipflap 11)
-(flipflap 10)
-
-(!! (take 100 (infiniteNats 1)))
-
-; force promises
-
-
-
-
-
-;;; (define (head-stream stream) 
-;;;     (car stream ) 
-;;; )
-
-;;; ( define (tail-stream stream )
-;;;     (cond 
-;;;         [( null? stream) '()]
-;;;         [( null? (cdr stream)) '()]
-;;;         [(pair? (cdr stream)) (cdr stream)] 
-;;;         [else (force (cdr stream))]
-;;;     )
-;;; )
-
-;;; (define (empty-stream? stream ) 
-;;;     ( null? stream )
-;;; )
-
-;;; (define the-empty-stream '())
-
-;;; ( define ( integers-from-n n ) 
-;;;     (cons 
-;;;         (delay
-;;;             (integers-from-n (+ 1 n))
-;;;         )
-;;;     )
-;;; ) 
-                    
-;;; ( define ab-3 ( integers-from-n 3))
-
-;;; (define (not-divisible? x y) 
-;;;     (not 
-;;;         (= 0 (remainder x y))
-;;;     )
-;;; )
-
-;;; ( define ( sieve stream ) 
-;;;     (cons
-;;;         (head-stream stream ) 
-;;;             (delay
-;;;                 (filter-stream
-;;;                     (rcurry not-divisible? ( head-stream stream ))
-;;;                     ( sieve ( tail-stream stream ) 
-;;;                 ) 
-;;;             ) 
-;;;         ) 
-;;;     ) 
-;;; )
-
-;;; (define *primes* (sieve ( integers-from-n 2 ) ))
+(!! (take 100 (map flipflap (nats 1))))
