@@ -19,13 +19,16 @@
     ) 
 )
 
-
+;; returns value form table or calculates value from function
 (define (ensure table f)
     (lambda (x)
         (let 
             (
                 [stored ((retrieve table) x)]
-         ;;       [show1 (displayln table)]
+                ;; FOR DEBUGING
+                [showLabel (display "for argument: ")]
+                [showKey (displayln x)]
+                [showTable (displayln table)]
             )
             (if stored 
                 stored 
