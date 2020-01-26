@@ -10,35 +10,34 @@
 
 (define table1 (make-hash))
 
-(define storeValue  
+(define store  
     (curry hash-set!)
 )
 
-(storeValue table1 1 "some value")
-(displayln "// storeValue (table1 1 2):")
+(store table1 1 "some value")
+(displayln "// store (table1 1 2):")
 (displayln table1)
 
-(define (retrieveValue table)
+(define (retrieve table)
     (lambda (key) 
         (hash-ref table key #f)
     ) 
 )
 
-(displayln "// retrive (table1 1):")
-(displayln ((retrieveValue table1) 1))
-(displayln "// retrive (table1 2):")
-(displayln ((retrieveValue table1) 2))
+(displayln "// retrieve (table1 1):")
+(displayln ((retrieve table1) 1))
+(displayln "// retrieve (table1 2):")
+(displayln ((retrieve table1) 2))
 
 (define (memo f)
     (letrec
-        (   [table (make-hash)] 
-            [store (storeValue table)]
-            [retrieve (retrieveValue table)]
+        (
+            [table (make-hash)] 
             [ensureValue (lambda (x)
-                (let ([storedValue (retrieve x)])
+                (let ([storedValue (retrieve table x)])
                     (if storedValue 
                         storedValue 
-                        (store x (f x))
+                        (store table x (f x))
                     )
                 ))
             ]
@@ -46,7 +45,6 @@
         ensureValue
     )
 )
-
 
 (define (harmonic k) 
     (if (= k 0)
