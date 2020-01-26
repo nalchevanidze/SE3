@@ -33,9 +33,9 @@
         (
             [table (make-hash)] 
             [ensureValue (lambda (x)
-                (let ([storedValue ((retrieve table) x)])
-                    (if storedValue 
-                        storedValue 
+                (let ([stored ((retrieve table) x)])
+                    (if stored 
+                        stored 
                         (store table x (f x))
                     )
                 ))
