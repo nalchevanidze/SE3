@@ -19,6 +19,22 @@
     ) 
 )
 
+
+(define (ensure table f)
+    (lambda (x)
+        (let 
+            (
+                [stored ((retrieve table) x)]
+         ;;       [show1 (displayln table)]
+            )
+            (if stored 
+                stored 
+                (store table x (f x))
+            )
+        )            
+    )
+)
+
 (define table1 (make-hash))
 (store table1 1 "some value")
 (displayln "// store (table1 1 2):")
@@ -27,21 +43,14 @@
 (displayln ((retrieve table1) 1))
 (displayln "// retrieve (table1 2):")
 (displayln ((retrieve table1) 2))
+(displayln "// ensure")
+((ensure table1 (lambda (x) 3)) 1)
+((ensure table1 (lambda (x) 3)) 2)
 
 (define (memo f)
     (letrec
-        (
-            [table (make-hash)] 
-            [ensureValue (lambda (x)
-                (let ([stored ((retrieve table) x)])
-                    (if stored 
-                        stored 
-                        (store table x (f x))
-                    )
-                ))
-            ]
-        )
-        ensureValue
+        ([table (make-hash)])
+        (ensure table f)
     )
 )
 
@@ -61,4 +70,4 @@
 )
 
 ;; Test memo function
-(map memHarmonic '(1 2 3 4 20 21 300 2 80))
+(map memHarmonic '(1 2 3 4 20 21 2))
