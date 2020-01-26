@@ -1,0 +1,54 @@
+#lang racket
+
+;;; 2 Memo-Funktionen (Bearbeitungszeit: 30 Min.)
+;;;  -----------------------------------------------
+;;;   Definieren Sie eine rekursive Funktion zur Berechnung der Harmonischen Reihe H(n) = 􏰀nk=1 k1 
+;;;   als Memo-Funktion, die sich schon berechnete Werte in einer Tabelle merkt. Stellen Sie sicher, 
+;;;   dass auch die rekursiven Aufrufe an die Memo-Funktion gehen.
+
+;;; (define (memo fn) 
+;;;     (letrec
+;;;         ([ table ’()] 
+;;;          [ store 
+;;;             (lambda (arg val)
+;;;                 (set! table 
+;;;                     (cons 
+;;;                         (cons arg val ) 
+;;;                         val 
+;;;                     )
+;;;                     table 
+;;;                 )
+;;;             )
+;;;          ]
+;;;         [ retrieve (lambda arg) 
+;;;             (let ((val-pair (assoc arg table)))
+;;;             (if val-pair (crd val-pair) #f)))
+;;;         ]
+
+
+(define (makeTable) 
+    '()
+)
+
+(define (storeValue table arg val)  
+    (set! 
+        table 
+        (cons (cons arg val) table) 
+    )
+)
+
+(define (retrieveValue table arg)
+    (let ((val-pair (assoc arg table)))
+        (if 
+            val-pair 
+            (cdr val-pair) 
+        #f
+        )
+    )
+)
+
+
+;;;  (letrec
+;;;         ([table makeTable] 
+;;;          [store (curry storeValue table)]
+         
