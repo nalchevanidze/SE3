@@ -6,17 +6,12 @@
 ;;;   als Memo-Funktion, die sich schon berechnete Werte in einer Tabelle merkt. Stellen Sie sicher, 
 ;;;   dass auch die rekursiven Aufrufe an die Memo-Funktion gehen.
 
-
-
-(define table1 (make-hash))
-
-(define store  
-    (curry hash-set!)
+(define (store table k v)
+    (let 
+        ([h (hash-set! table k v)])
+        v
+    )
 )
-
-(store table1 1 "some value")
-(displayln "// store (table1 1 2):")
-(displayln table1)
 
 (define (retrieve table)
     (lambda (key) 
@@ -24,6 +19,10 @@
     ) 
 )
 
+(define table1 (make-hash))
+(store table1 1 "some value")
+(displayln "// store (table1 1 2):")
+(displayln table1)
 (displayln "// retrieve (table1 1):")
 (displayln ((retrieve table1) 1))
 (displayln "// retrieve (table1 2):")
@@ -34,7 +33,7 @@
         (
             [table (make-hash)] 
             [ensureValue (lambda (x)
-                (let ([storedValue (retrieve table x)])
+                (let ([storedValue ((retrieve table) x)])
                     (if storedValue 
                         storedValue 
                         (store table x (f x))
@@ -46,14 +45,20 @@
     )
 )
 
+;;; not memoized
 (define (harmonic k) 
     (if (= k 0)
         0
         (+ 
             (/ 1 k)
-            (harmonic (- k 1))
+            (memHarmonic (- k 1))
         ) 
     )
 )
 
-(map harmonic '(1 2 3 4))
+(define memHarmonic 
+    (memo harmonic)
+)
+
+;; Test memo function
+(map memHarmonic '(1 2 3 4 20 21 300 2 80))
