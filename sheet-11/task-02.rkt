@@ -6,7 +6,7 @@
 ;;;   als Memo-Funktion, die sich schon berechnete Werte in einer Tabelle merkt. Stellen Sie sicher, 
 ;;;   dass auch die rekursiven Aufrufe an die Memo-Funktion gehen.
 
-(define (store table k v)
+(define (store! table k v)
     (let 
         ([h (hash-set! table k v)])
         v
@@ -29,14 +29,14 @@
             )
             (if stored 
                 stored 
-                (store table x (f x))
+                (store! table x (f x))
             )
         )            
     )
 )
 
 (define table1 (make-hash))
-(store table1 1 "some value")
+(store! table1 1 "some value")
 (displayln "// store (table1 1 2):")
 (displayln table1)
 (displayln "// retrieve (table1 1):")
