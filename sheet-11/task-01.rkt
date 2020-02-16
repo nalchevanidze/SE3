@@ -51,18 +51,35 @@
 (<- (fach 4 "Chemie"))
 
 #|
-;;1.
 
-(?- (findall  ?r (note ?r 4 2) ?schueler))
+(<- (chemieNote ?name ?note)
+    (schueler ?name ?id ?)
+    (note ?id 4 ?note) 
+)
+
+;;1.
+(?- 
+    (findall ?name (chemieNote ?name 2)  ?name)
+)
 
 ;;2.
-
 (?- (count ?numOfStudents (note ? 4 2) ))
 
 ;;3.
-(?- (schueler ?name ? ?favTopic) (schueler ?name2 ? ?favTopic1) (= ?favTopic ?favTopic1) (!= ?name ?name2))
+(?- 
+    (schueler ?x ? ?topic)
+    (schueler ?y ? ?topic)
+    (!= ?x ?y)
+)
 |#
+
 ;;4
-(?- (note ?studentIDs ? ?grade) (= ?grade 4) (schueler ?name ?studentIDs ?)
-    (note ?studentIDs ? ?grade) (= ?grade 5) (schueler ?name ?studentIDs ?)
-(note ?studentIDs ? ?grade) (= ?grade 6) (schueler ?name ?studentIDs ?))
+(<- (hasNote ?name ?note)
+    (schueler ?name ?id ?)
+    (note ? ?id ?note)
+)
+
+(?- 
+    (hasNote ?name ?note) 
+    (test (< ?note 3))
+)
