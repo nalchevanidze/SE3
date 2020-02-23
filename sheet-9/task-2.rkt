@@ -57,10 +57,12 @@
 
 (defclass Meerestiere (Tier)
     (waterSpeed
-        :initarg :init-speed-water :accessor speed
+        :initarg :init-speed-water 
+        :accessor speed
     )
     (waterHabitat 
-     :initvalue 'Sea :accessor habitat 
+     :initvalue 'Sea 
+     :accessor habitat 
      )
     :documentation "in Meer lebend"
 )
